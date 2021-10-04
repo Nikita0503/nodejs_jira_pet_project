@@ -3,7 +3,7 @@ const {check} = require('express-validator');
 const router = new Router();
 const UserController = require('../../controllers/userController');
 
-router.post('/', UserController.getAllUsers);
+router.get('/', UserController.getAllUsers);
 
 router.post('/login', 
     check('email').isEmail().withMessage('Not an email'),
