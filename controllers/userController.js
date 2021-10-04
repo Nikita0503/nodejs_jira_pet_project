@@ -1,4 +1,5 @@
-const ApiError = require("../errors/ApiError");
+const ApiError = require('../errors/ApiError');
+const UserService = require('../service/UserService')
 const {validationResult} = require('express-validator');
 
 class UserController {
@@ -7,14 +8,18 @@ class UserController {
     }
 
     async registration(req, res, next){
-        const errors = validationResult(req);
-        if(!errors.isEmpty()){
-            return next(ApiError.badRequest("Invalid data", errors))
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {email, password, name, role} = req.body;
+            const user = await UserService.registration(email, password, name, role);
+            return res.json(user)
+        } catch (e) {
+            next(e);
         }
         
-        const {email, password} = req.body;
-        
-        return res.json({'message': 'registration'})
     }
 }
 

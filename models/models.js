@@ -39,7 +39,6 @@ const User = sequelize.define('user', {
     password: {type: DataTypes.STRING, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue: "USER"},
     avatar: {type: DataTypes.STRING},
-    isActivated: {type: DataTypes.BOOLEAN, allowNull: false}
 });
 
 const File = sequelize.define('file', {
