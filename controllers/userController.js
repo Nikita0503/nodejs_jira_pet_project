@@ -14,7 +14,7 @@ class UserController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {email, password, name, role} = req.body;
-            const user = await UserService.registration(email, password, name, role);
+            const user = await UserService.registration(email, toString(password), name, role);
             return res.json(user)
         } catch (e) {
             next(e);
