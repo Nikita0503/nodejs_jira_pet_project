@@ -7,7 +7,7 @@ class UserController {
         return res.json({'message': 'login'})
     }
 
-    async registration(req, res, next){
+    async registration(req, res, next){ //TODO: add avatar to User && check does role exist
         try{
             const errors = validationResult(req);
             if(!errors.isEmpty()){
