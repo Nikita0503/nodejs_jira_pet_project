@@ -1,9 +1,10 @@
 const Router = require('express');
 const router = new Router();
 const userRouter = require('./user/userRouter');
+const projectRouter = require('./project/projectRouter');
 
-router.use('/user', userRouter)
-//router.use('/project')
+router.use('/user', userRouter);
+router.use('/project', projectRouter);
 //router.use('/task')
 //router.use('/status')
 //router.use('/type')

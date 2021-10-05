@@ -6,7 +6,7 @@ const UserController = require('../../controllers/userController');
 
 const router = new Router();
 router.get('/',
-    checkRoleMiddleware('ADMIN'),
+    authMiddleware,
     UserController.getAllUsers);
 
 router.post('/login',
