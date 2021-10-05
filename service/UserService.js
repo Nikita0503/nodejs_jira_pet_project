@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const { User } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 
-const generateToken = (id, email, name) => {
+const generateToken = (id, email, name, role) => {
     return jwt.sign(
-        {id, email, name},
+        {id, email, name, role},
         process.env.SECRET_KEY,
         {expiresIn: '24h'}
     )
@@ -21,7 +21,7 @@ class UserService {
         if(!comparePassword){
             throw ApiError.badRequest('Wrong password')
         }
-        const token = generateToken(user.id, user.email, user.name);
+        const token = generateToken(user.id, user.email, user.name, user.role);
         return token;
     }
 
@@ -32,7 +32,7 @@ class UserService {
         }
         const hashPassword = await bcrypt.hash(password, 3);
         const user = await User.create({email, password: hashPassword, name, role});
-        const token = generateToken(user.id, user.email, user.name);
+        const token = generateToken(user.id, user.email, user.name, user.role);
         return token;
     }
 
