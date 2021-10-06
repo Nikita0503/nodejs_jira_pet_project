@@ -35,8 +35,18 @@ class ProjectController {
             }
             const {id} = req.params;
             const {title, description} = req.body;
-            const project = await ProjectService.editProject(id, title, description);
-            return res.json({updated: project})
+            const isDone = await ProjectService.editProject(id, title, description);
+            return res.json({updated: isDone});
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteProject(req, res, next){
+        try {
+            const {id} = req.params;
+            const isDone = await ProjectService.deleteProject(id);
+            return res.json({deleted: isDone});
         } catch (e) {
             next(e);
         }

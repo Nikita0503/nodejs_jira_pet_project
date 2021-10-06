@@ -29,6 +29,15 @@ class ProjectService {
         const updatedProjectId = await Project.update({title, description}, {where: {id}});
         return !!updatedProjectId;
     }
+
+    async deleteProject(id){
+        let project = await Project.findOne({where: {id}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${title}' not found`);
+        }
+        const deletedProjectId = await Project.destroy({where: {id}});
+        return !!deletedProjectId;
+    }
 }
 
 module.exports = new ProjectService();

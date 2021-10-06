@@ -20,5 +20,8 @@ router.put('/:id',
     ProjectController.editProject);
 
 //TODO: deleting project
+router.delete('/:id',
+    checkRoleMiddleware('ADMIN'),
+    ProjectController.deleteProject);
 
 module.exports = router;
