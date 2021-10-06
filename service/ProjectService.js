@@ -20,7 +20,7 @@ class ProjectService {
     async editProject(id, title, description){
         let project = await Project.findOne({where: {id}});
         if(!project){
-            throw ApiError.badRequest(`Project with id '${title}' not found`);
+            throw ApiError.badRequest(`Project with id '${id}' not found`);
         }
         project = await Project.findOne({where: {title, id: {[Op.ne]: [id]}}});
         if(project){
@@ -33,7 +33,7 @@ class ProjectService {
     async deleteProject(id){
         let project = await Project.findOne({where: {id}});
         if(!project){
-            throw ApiError.badRequest(`Project with id '${title}' not found`);
+            throw ApiError.badRequest(`Project with id '${id}' not found`);
         }
         const deletedProjectId = await Project.destroy({where: {id}});
         return !!deletedProjectId;

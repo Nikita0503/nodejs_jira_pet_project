@@ -19,7 +19,6 @@ router.put('/:id',
     ...editProjectValidators(),
     ProjectController.editProject);
 
-//TODO: deleting project
 router.delete('/:id',
     checkRoleMiddleware('ADMIN'),
     ProjectController.deleteProject);
