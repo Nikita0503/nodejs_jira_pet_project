@@ -24,4 +24,6 @@ router.delete('/:id',
     checkRoleMiddleware('ADMIN'),
     TaskController.deleteTask);
 
+//TODO: get tasks of project
+
 module.exports = router;
