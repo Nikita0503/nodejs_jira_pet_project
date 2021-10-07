@@ -1,4 +1,4 @@
-const { Project } = require("../models/models");
+const { Project, User, ProjectUser } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
@@ -37,6 +37,19 @@ class ProjectService {
         }
         const deletedProjectId = await Project.destroy({where: {id}});
         return !!deletedProjectId;
+    }
+
+    async addUserToProject(projectId, userId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${id}' not found`);
+        }
+        const user = await User.findOne({where: {id: userId}});
+        if(!user){
+            throw ApiError.badRequest(`User with id ${userId} not found`)
+        }
+        const addedUserToProject = await ProjectUser.create({projectId, userId});
+        return !!addedUserToProject;
     }
 }
 

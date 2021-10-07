@@ -4,6 +4,8 @@ const userRouter = require('./user/userRouter');
 const projectRouter = require('./project/projectRouter');
 const taskRouter = require('./task/taskRouter');
 
+//TODO: refactor to projects/:projectId/tasks/:taskId
+
 router.use('/user', userRouter);
 router.use('/project', projectRouter);
 router.use('/task', taskRouter)

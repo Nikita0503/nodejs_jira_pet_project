@@ -51,6 +51,22 @@ class ProjectController {
             next(e);
         }
     }
+
+    
+    async addUserToProject(req, res, next){
+        try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {projectId} = req.params;
+            const {userId} = req.body;
+            const isDone = await ProjectService.addUserToProject(projectId, userId);
+            return res.json({added: isDone})
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 module.exports = new ProjectController();

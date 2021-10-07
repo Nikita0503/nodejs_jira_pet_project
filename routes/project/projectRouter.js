@@ -1,5 +1,5 @@
 const Router = require('express');
-const {createProjectValidators, editProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
+const {createProjectValidators, editProjectValidators, addUserToProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const ProjectController = require('../../controllers/ProjectController');
@@ -22,5 +22,10 @@ router.put('/:id',
 router.delete('/:id',
     checkRoleMiddleware('ADMIN'),
     ProjectController.deleteProject);
+
+router.post('/:projectId/users',
+    checkRoleMiddleware('ADMIN'),
+    ...addUserToProjectValidators(),
+    ProjectController.addUserToProject)
 
 module.exports = router;
