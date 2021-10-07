@@ -1,5 +1,5 @@
 const Router = require('express');
-const {createTaskValidators} = require('../../middlewares/validators/taskRouterValidators');
+const {createTaskValidators, editTaskValidators} = require('../../middlewares/validators/taskRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const TaskController = require('../../controllers/TaskController');
@@ -15,10 +15,10 @@ router.post('/:projectId',
     ...createTaskValidators(),
     TaskController.createTask);
 
-//TODO: task editing
-/*router.put('/:id', 
+router.put('/:id', 
     checkRoleMiddleware('ADMIN'),
-    TaskController.editTask);*/
+    ...editTaskValidators(),
+    TaskController.editTask);
 
 router.delete('/:id',
     checkRoleMiddleware('ADMIN'),

@@ -23,6 +23,23 @@ class TaskService {
         return task;
     }
 
+    async editTask(id, title, description, timeAllotted, timeTracked, statusId, typeId, userId){
+        const task = await Task.findOne({where: {id}});
+        if(!task){
+            throw ApiError.badRequest(`Task with id '${id}' not found`);
+        }
+        if(userId){
+            const user = await User.findOne({where: {id: userId}});
+            if(!user){
+                throw ApiError.badRequest(`User with id ${userId} not found`)
+            }
+        }
+        //TODO: check statusId
+        //TODO: check typeId
+        const updatedTaskId = await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id}});
+        return !!updatedTaskId;
+    }
+
     async deleteTask(id){
         let task = await Task.findOne({where: {id}});
         if(!task){
