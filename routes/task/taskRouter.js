@@ -1,13 +1,17 @@
 const {Router} = require('express');
-const {createTaskValidators, editTaskValidators} = require('../../middlewares/validators/taskRouterValidators');
+const {getTasksValidators,
+    createTaskValidators, 
+    editTaskValidators,
+    deleteTaskValidators} = require('../../middlewares/validators/taskRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const TaskController = require('../../controllers/TaskController');
 
 const router = new Router({mergeParams: true});
 
-router.get('/',
+router.get('/', //TODO: check project id!
     authMiddleware,
+    ...getTasksValidators(),
     TaskController.getTasks);
 
 router.post('/',
@@ -22,6 +26,7 @@ router.put('/:taskId',
 
 router.delete('/:taskId',
     checkRoleMiddleware('ADMIN'),
+    ...deleteTaskValidators(),
     TaskController.deleteTask);
 
 module.exports = router;
