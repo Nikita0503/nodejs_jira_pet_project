@@ -25,7 +25,6 @@ class TaskController {
             const task = await TaskService.createTask(projectId, title, description, timeAllotted, statusId, typeId, userId);
             return res.json({task})
         } catch (e) {
-            console.log(e)
             next(e);
         }
     }
@@ -41,17 +40,21 @@ class TaskController {
             const isDone = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId);
             return res.json({updated: isDone})
         } catch (e) {
-            console.log("ERROR", e)
             next(e);
         }
     }
 
     async deleteTask(req, res, next){
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
             const {projectId, taskId} = req.params;
             const isDone = await TaskService.deleteTask(projectId, taskId);
             return res.json({deleted: isDone})
         } catch (e) {
+            console.log(e)
             next(e);
         }
     }
