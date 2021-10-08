@@ -1,11 +1,19 @@
 const Router = require('express');
-const {createProjectValidators, editProjectValidators, addUserToProjectValidators,
-    getProjectMembersValidators, deleteUserFromProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
+const taskRouter = require('../task/taskRouter');
+
+const {createProjectValidators, 
+    editProjectValidators, 
+    addUserToProjectValidators,
+    getProjectMembersValidators, 
+    deleteUserFromProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const ProjectController = require('../../controllers/ProjectController');
 
 const router = new Router();
+
+router.use('/:projectId/tasks', taskRouter); //TODO: protect: for only project members
+
 router.get('/',
     authMiddleware,
     ProjectController.getAllProjects);

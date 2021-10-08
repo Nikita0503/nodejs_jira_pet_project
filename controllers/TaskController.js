@@ -35,19 +35,20 @@ class TaskController {
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
-            const {id} = req.params;
+            const {projectId, taskId} = req.params;
             const {title, description, timeAllotted, timeTracked, statusId, typeId, userId} = req.body;
-            const isDone = await TaskService.editTask(id, title, description, timeAllotted, timeTracked, statusId, typeId, userId);
+            const isDone = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId);
             return res.json({updated: isDone})
         } catch (e) {
+            console.log("ERROR", e)
             next(e);
         }
     }
 
     async deleteTask(req, res, next){
         try {
-            const {id} = req.params;
-            const isDone = await TaskService.deleteTask(id);
+            const {projectId, taskId} = req.params;
+            const isDone = await TaskService.deleteTask(projectId, taskId);
             return res.json({deleted: isDone})
         } catch (e) {
             next(e);

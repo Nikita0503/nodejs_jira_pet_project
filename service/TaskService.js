@@ -23,10 +23,14 @@ class TaskService {
         return task;
     }
 
-    async editTask(id, title, description, timeAllotted, timeTracked, statusId, typeId, userId){
-        const task = await Task.findOne({where: {id}});
+    async editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const task = await Task.findOne({where: {id: taskId}});
         if(!task){
-            throw ApiError.badRequest(`Task with id '${id}' not found`);
+            throw ApiError.badRequest(`Task with id '${taskId}' not found`);
         }
         if(userId){
             const user = await User.findOne({where: {id: userId}});
@@ -36,16 +40,20 @@ class TaskService {
         }
         //TODO: check statusId
         //TODO: check typeId
-        const updatedTaskId = await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id}});
+        const updatedTaskId = await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id: taskId}});
         return !!updatedTaskId;
     }
 
-    async deleteTask(id){
-        let task = await Task.findOne({where: {id}});
-        if(!task){
-            throw ApiError.badRequest(`Task with id '${id}' not found`);
+    async deleteTask(projectId, taskId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
-        const deletedTaskId = await Task.destroy({where: {id}});
+        const task = await Task.findOne({where: {id: taskId}});
+        if(!task){
+            throw ApiError.badRequest(`Task with id '${taskId}' not found`);
+        }
+        const deletedTaskId = await Task.destroy({where: {id: taskId}});
         return !!deletedTaskId;
     }
 }

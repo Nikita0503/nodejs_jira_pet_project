@@ -49,7 +49,6 @@ class ProjectService {
             throw ApiError.badRequest(`User with id ${userId} not found`);
         }
         const userInProject = await ProjectUser.findAll({where: {projectId, userId}});
-        console.log("LOG", userInProject)
         if(userInProject.length > 0){
             throw ApiError.badRequest(`User with id ${userId} already added`);
         }
