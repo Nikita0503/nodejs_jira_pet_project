@@ -67,6 +67,35 @@ class ProjectController {
             next(e);
         }
     }
+
+    async getProjectMembers(req, res, next){
+        try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {projectId} = req.params;
+            const users = await ProjectService.getProjectMembers(projectId);
+            return res.json({users})
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteUserFromProject(req, res, next){
+        try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {projectId} = req.params;
+            const {userId} = req.body;
+            const isDone = await ProjectService.deleteUserFromProject(projectId, userId);
+            return res.json({deleted: isDone})
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 module.exports = new ProjectController();

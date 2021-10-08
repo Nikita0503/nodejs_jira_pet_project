@@ -12,7 +12,20 @@ const editProjectValidators = () => {
     ]
 }
 
+const getProjectMembersValidators = () => {
+    return [
+        check('projectId').isNumeric().withMessage('Must be a number'),
+    ]
+}
+
 const addUserToProjectValidators = () => {
+    return [
+        check('projectId').isNumeric().withMessage('Must be a number'),
+        check('userId').isNumeric().withMessage('Must be a number'),
+    ];
+};
+
+const deleteUserFromProjectValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),
         check('userId').isNumeric().withMessage('Must be a number'),
@@ -22,5 +35,7 @@ const addUserToProjectValidators = () => {
 module.exports = {
     createProjectValidators,
     editProjectValidators,
-    addUserToProjectValidators
+    addUserToProjectValidators,
+    getProjectMembersValidators,
+    deleteUserFromProjectValidators
 }
