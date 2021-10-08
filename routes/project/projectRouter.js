@@ -3,6 +3,7 @@ const taskRouter = require('../task/taskRouter');
 
 const {createProjectValidators, 
     editProjectValidators, 
+    deleteProjectValidators,
     addUserToProjectValidators,
     getProjectMembersValidators, 
     deleteUserFromProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
@@ -23,13 +24,14 @@ router.post('/',
     ...createProjectValidators(),
     ProjectController.createProject);
 
-router.put('/:id', 
+router.put('/:projectId', 
     checkRoleMiddleware('ADMIN'),
     ...editProjectValidators(),
     ProjectController.editProject);
 
-router.delete('/:id',
+router.delete('/:projectId',
     checkRoleMiddleware('ADMIN'),
+    ...deleteProjectValidators(),
     ProjectController.deleteProject);
 
 router.get('/:projectId/users',

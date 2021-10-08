@@ -33,9 +33,9 @@ class ProjectController {
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
-            const {id} = req.params;
+            const {projectId} = req.params;
             const {title, description} = req.body;
-            const isDone = await ProjectService.editProject(id, title, description);
+            const isDone = await ProjectService.editProject(projectId, title, description);
             return res.json({updated: isDone});
         } catch (e) {
             next(e);
@@ -44,25 +44,9 @@ class ProjectController {
 
     async deleteProject(req, res, next){
         try {
-            const {id} = req.params;
-            const isDone = await ProjectService.deleteProject(id);
-            return res.json({deleted: isDone});
-        } catch (e) {
-            next(e);
-        }
-    }
-
-    
-    async addUserToProject(req, res, next){
-        try {
-            const errors = validationResult(req);
-            if(!errors.isEmpty()){
-                return next(ApiError.badRequest("Invalid data", errors))
-            }
             const {projectId} = req.params;
-            const {userId} = req.body;
-            const isDone = await ProjectService.addUserToProject(projectId, userId);
-            return res.json({added: isDone})
+            const isDone = await ProjectService.deleteProject(projectId);
+            return res.json({deleted: isDone});
         } catch (e) {
             next(e);
         }
@@ -77,6 +61,21 @@ class ProjectController {
             const {projectId} = req.params;
             const users = await ProjectService.getProjectMembers(projectId);
             return res.json({users})
+        } catch (e) {
+            next(e);
+        }
+    }
+    
+    async addUserToProject(req, res, next){
+        try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {projectId} = req.params;
+            const {userId} = req.body;
+            const isDone = await ProjectService.addUserToProject(projectId, userId);
+            return res.json({added: isDone})
         } catch (e) {
             next(e);
         }

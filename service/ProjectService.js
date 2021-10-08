@@ -17,26 +17,39 @@ class ProjectService {
         return project;
     }
 
-    async editProject(id, title, description){
-        let project = await Project.findOne({where: {id}});
+    async editProject(projectId, title, description){
+        let project = await Project.findOne({where: {id: projectId}});
         if(!project){
-            throw ApiError.badRequest(`Project with id '${id}' not found`);
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
-        project = await Project.findOne({where: {title, id: {[Op.ne]: [id]}}});
-        if(project){
-            throw ApiError.internal(`Project with title '${title}' already exist`);
+        if(title){
+            project = await Project.findOne({where: {title, id: {[Op.ne]: [projectId]}}});
+            if(project){
+                throw ApiError.internal(`Project with title '${title}' already exist`);
+            }
         }
-        const updatedProjectId = await Project.update({title, description}, {where: {id}});
+        const updatedProjectId = await Project.update({title, description}, {where: {id: projectId}});
         return !!updatedProjectId;
     }
 
-    async deleteProject(id){
-        let project = await Project.findOne({where: {id}});
+    async deleteProject(projectId){
+        let project = await Project.findOne({where: {id: projectId}});
         if(!project){
-            throw ApiError.badRequest(`Project with id '${id}' not found`);
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
-        const deletedProjectId = await Project.destroy({where: {id}});
+        const deletedProjectId = await Project.destroy({where: {id: projectId}});
         return !!deletedProjectId;
+    }
+
+    async getProjectMembers(projectId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const users = await ProjectUser.findAll({where: {projectId}});
+        const ids = users.map(user => user.userId)
+        const projectMembers = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']},  where: {id: [...ids]}})
+        return projectMembers;
     }
 
     async addUserToProject(projectId, userId){
@@ -54,17 +67,6 @@ class ProjectService {
         }
         const addedUserToProject = await ProjectUser.create({projectId, userId});
         return !!addedUserToProject;
-    }
-
-    async getProjectMembers(projectId){
-        const project = await Project.findOne({where: {id: projectId}});
-        if(!project){
-            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
-        }
-        const users = await ProjectUser.findAll({where: {projectId}});
-        const ids = users.map(user => user.userId)
-        const projectMembers = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']},  where: {id: [...ids]}})
-        return projectMembers;
     }
 
     async deleteUserFromProject(projectId, userId){

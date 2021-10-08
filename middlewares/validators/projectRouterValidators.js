@@ -8,7 +8,13 @@ const createProjectValidators = () => {
 
 const editProjectValidators = () => {
     return [
-        check('title').notEmpty().withMessage('Title is required'),
+        check('projectId').isNumeric().withMessage('Must be a number'),
+    ]
+}
+
+const deleteProjectValidators = () => {
+    return [
+        check('projectId').isNumeric().withMessage('Must be a number'),
     ]
 }
 
@@ -35,6 +41,7 @@ const deleteUserFromProjectValidators = () => {
 module.exports = {
     createProjectValidators,
     editProjectValidators,
+    deleteProjectValidators,
     addUserToProjectValidators,
     getProjectMembersValidators,
     deleteUserFromProjectValidators
