@@ -13,7 +13,7 @@ const ProjectController = require('../../controllers/ProjectController');
 
 const router = new Router();
 
-router.use('/:projectId/tasks', taskRouter); //TODO: protect: for only project members
+router.use('/:projectId/tasks', taskRouter);
 
 router.get('/',
     authMiddleware,
