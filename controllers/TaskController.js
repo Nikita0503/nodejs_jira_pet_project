@@ -7,7 +7,8 @@ class TaskController {
     async getTasks(req, res, next){
         try{
             const {projectId} = req.params;
-            const tasks = await TaskService.getTasks(projectId);
+            const token = req.headers.authorization.split(' ')[1];
+            const tasks = await TaskService.getTasks(projectId, token);
             return res.json({tasks})
         } catch (e) {
             next(e);
@@ -54,7 +55,6 @@ class TaskController {
             const isDone = await TaskService.deleteTask(projectId, taskId);
             return res.json({deleted: isDone})
         } catch (e) {
-            console.log(e)
             next(e);
         }
     }

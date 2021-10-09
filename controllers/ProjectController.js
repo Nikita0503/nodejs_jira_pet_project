@@ -59,7 +59,8 @@ class ProjectController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {projectId} = req.params;
-            const users = await ProjectService.getProjectMembers(projectId);
+            const token = req.headers.authorization.split(' ')[1];
+            const users = await ProjectService.getProjectMembers(projectId, token);
             return res.json({users})
         } catch (e) {
             next(e);

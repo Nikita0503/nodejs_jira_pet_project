@@ -1,9 +1,15 @@
-const { Task, Project, User } = require("../models/models");
+const { Task, Project, User, ProjectUser } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
+const jwt = require('jsonwebtoken');
 
 class TaskService {
-    async getTasks(projectId){
+    async getTasks(projectId, token){
+        const user = jwt.decode(token);
+        const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
+        if(!userInProject && user.role != 'ADMIN'){
+            throw ApiError.forbidden('you do not have permissions to this resource')
+        }
         const tasks = await Task.findAll({where: {projectId}});
         return tasks;
     }

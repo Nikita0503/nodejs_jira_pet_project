@@ -1,6 +1,7 @@
 const { Project, User, ProjectUser } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
+const jwt = require('jsonwebtoken');
 
 class ProjectService {
     async getAllProjects(){
@@ -41,10 +42,15 @@ class ProjectService {
         return !!deletedProjectId;
     }
 
-    async getProjectMembers(projectId){
+    async getProjectMembers(projectId, token){
         const project = await Project.findOne({where: {id: projectId}});
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const user = jwt.decode(token);
+        const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
+        if(!userInProject && user.role != 'ADMIN'){
+            throw ApiError.forbidden('you do not have permissions to this resource')
         }
         const users = await ProjectUser.findAll({where: {projectId}});
         const ids = users.map(user => user.userId)
@@ -61,8 +67,8 @@ class ProjectService {
         if(!user){
             throw ApiError.badRequest(`User with id ${userId} not found`);
         }
-        const userInProject = await ProjectUser.findAll({where: {projectId, userId}});
-        if(userInProject.length > 0){
+        const userInProject = await ProjectUser.findOne({where: {projectId, userId}});
+        if(userInProject){
             throw ApiError.badRequest(`User with id ${userId} already added`);
         }
         const addedUserToProject = await ProjectUser.create({projectId, userId});

@@ -9,7 +9,7 @@ const TaskController = require('../../controllers/TaskController');
 
 const router = new Router({mergeParams: true});
 
-router.get('/', //TODO: check project id!
+router.get('/',
     authMiddleware,
     ...getTasksValidators(),
     TaskController.getTasks);

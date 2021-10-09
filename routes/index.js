@@ -3,8 +3,6 @@ const router = new Router();
 const userRouter = require('./user/userRouter');
 const projectRouter = require('./project/projectRouter');
 
-//TODO: refactor to projects/:projectId/tasks/:taskId
-
 router.use('/user', userRouter);
 router.use('/projects', projectRouter);
 //router.use('/status')

@@ -18,7 +18,7 @@ class UserController {
         }
     }
 
-    async registration(req, res, next){ //TODO: add avatar to User && check does role exist
+    async registration(req, res, next){ //TODO: add avatar to User
         try{
             const errors = validationResult(req);
             if(!errors.isEmpty()){
