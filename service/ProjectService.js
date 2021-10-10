@@ -10,7 +10,7 @@ class ProjectService {
     }
 
     async createProject(title, description){
-        const candidate = await Project.findOne({where: {title}});
+        const candidate = await Project.findOne({where: {title: title.toString()}});
         if(candidate){
             throw ApiError.internal(`Project with title '${title}' already exist`);
         }
@@ -24,7 +24,7 @@ class ProjectService {
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
         if(title){
-            project = await Project.findOne({where: {title, id: {[Op.ne]: [projectId]}}});
+            project = await Project.findOne({where: {title: title.toString(), id: {[Op.ne]: [projectId]}}});
             if(project){
                 throw ApiError.internal(`Project with title '${title}' already exist`);
             }
@@ -34,7 +34,7 @@ class ProjectService {
     }
 
     async deleteProject(projectId){
-        let project = await Project.findOne({where: {id: projectId}});
+        const project = await Project.findOne({where: {id: projectId}});
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }

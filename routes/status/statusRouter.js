@@ -1,5 +1,7 @@
 const {Router} = require('express');
-const {createStatusValidators} = require('../../middlewares/validators/statusRouterValidators');
+const {statusValidators,
+    deleteStatusValidators,
+    editStatusValidators} = require('../../middlewares/validators/statusRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const StatusController = require('../../controllers/StatusController');
@@ -12,8 +14,18 @@ router.get('/',
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),
-    ...createStatusValidators(),
+    ...statusValidators(),
     StatusController.createStatus);
+
+router.put('/:statusId',
+    checkRoleMiddleware('ADMIN'),
+    ...editStatusValidators(),
+    StatusController.editStatus);
+
+router.delete('/:statusId',
+    checkRoleMiddleware('ADMIN'),
+    ...deleteStatusValidators(),
+    StatusController.deleteStatus);
 
 //TODO: add put (edit) and delele methods
 
