@@ -27,6 +27,4 @@ router.delete('/:statusId',
     ...deleteStatusValidators(),
     StatusController.deleteStatus);
 
-//TODO: add put (edit) and delele methods
-
 module.exports = router;
