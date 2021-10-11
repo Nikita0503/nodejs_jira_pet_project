@@ -6,7 +6,7 @@ const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const StatusController = require('../../controllers/StatusController');
 
-const router = new Router({mergeParams: true});
+const router = new Router();
 
 router.get('/',
     authMiddleware,

@@ -4,8 +4,8 @@ const { Op } = require("sequelize");
 
 class StatusService {
     async getAllStatuses(){
-        const projects = await Status.findAll();
-        return projects;
+        const statuses = await Status.findAll();
+        return statuses;
     }
 
     async createStatus(title, color){
