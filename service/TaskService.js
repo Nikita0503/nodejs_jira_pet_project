@@ -1,4 +1,4 @@
-const { Task, Project, User, ProjectUser } = require("../models/models");
+const { Task, Project, User, ProjectUser, Status, Type } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
@@ -23,8 +23,14 @@ class TaskService {
         if(!user){
             throw ApiError.badRequest(`User with id ${userId} not found`)
         }
-        //TODO: check statusId
-        //TODO: check typeId
+        const status = await Status.findOne({where: {id: statusId}});
+        if(!status){
+            throw ApiError.badRequest(`Status with id '${statusId}' not found`);
+        }
+        const type = await Type.findOne({where: {id: typeId}});
+        if(!type){
+            throw ApiError.badRequest(`Type with id '${typeId}' not found`);
+        }
         const task = await Task.create({title, description, timeTracked: null, timeAllotted, projectId, statusId, typeId, userId});
         return task;
     }
@@ -44,8 +50,14 @@ class TaskService {
                 throw ApiError.badRequest(`User with id ${userId} not found`)
             }
         }
-        //TODO: check statusId
-        //TODO: check typeId
+        const status = await Status.findOne({where: {id: statusId}});
+        if(!status){
+            throw ApiError.badRequest(`Status with id '${statusId}' not found`);
+        }
+        const type = await Type.findOne({where: {id: typeId}});
+        if(!type){
+            throw ApiError.badRequest(`Type with id '${typeId}' not found`);
+        }
         const updatedTaskId = await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id: taskId}});
         return !!updatedTaskId;
     }
