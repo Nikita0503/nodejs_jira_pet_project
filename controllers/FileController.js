@@ -31,7 +31,6 @@ class TaskController {
             const isDone = await FileService.deleteFile(fileId);
             res.json({deleted: isDone});
         } catch (e) {
-            console.log(e)
             next(e);
         }
     }

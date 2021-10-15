@@ -1,4 +1,6 @@
 const {Router} = require('express');
+const commentRouter = require('../comment/commentRouter');
+
 const {getTasksValidators,
     createTaskValidators, 
     editTaskValidators,
@@ -8,6 +10,8 @@ const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const TaskController = require('../../controllers/TaskController');
 
 const router = new Router({mergeParams: true});
+
+router.use('/:taskId/comments', commentRouter);
 
 router.get('/',
     authMiddleware,

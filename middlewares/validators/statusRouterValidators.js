@@ -1,6 +1,6 @@
 const {check} = require('express-validator');
 
-const statusValidators = () => {
+const createStatusValidators = () => {
     return [
         check('title').notEmpty().withMessage('Title is required'),
         check('color').custom(value => {
@@ -36,7 +36,7 @@ const editStatusValidators = () => {
 }
 
 module.exports = {
-    statusValidators,
+    createStatusValidators,
     deleteStatusValidators,
     editStatusValidators
 }

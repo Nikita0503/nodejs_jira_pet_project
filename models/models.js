@@ -76,6 +76,9 @@ Task.belongsTo(Type);
 User.hasMany(Task);
 Task.belongsTo(User);
 
+User.hasMany(Comment);
+Comment.belongsTo(User);
+
 module.exports = {
     Project,
     Task,

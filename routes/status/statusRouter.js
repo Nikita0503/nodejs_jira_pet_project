@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const {statusValidators,
+const {createStatusValidators,
     deleteStatusValidators,
     editStatusValidators} = require('../../middlewares/validators/statusRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
@@ -14,7 +14,7 @@ router.get('/',
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),
-    ...statusValidators(),
+    ...createStatusValidators(),
     StatusController.createStatus);
 
 router.put('/:statusId',

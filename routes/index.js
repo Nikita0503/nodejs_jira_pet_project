@@ -10,7 +10,6 @@ router.use('/users', userRouter);
 router.use('/projects', projectRouter);
 router.use('/statuses', statusRouter);
 router.use('/types', typeRouter);
-//router.use('/comment')
 router.use('/files', fileRouter);
 
 module.exports = router;

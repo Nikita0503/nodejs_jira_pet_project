@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const {typeValidators, editTypeValidators, deleteTypeValidators} = require('../../middlewares/validators/typeRouterValidators');
+const {createTypeValidators, editTypeValidators, deleteTypeValidators} = require('../../middlewares/validators/typeRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const TypeController = require('../../controllers/TypeController');
@@ -12,7 +12,7 @@ router.get('/',
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),
-    ...typeValidators(),
+    ...createTypeValidators(),
     TypeController.createType);
 
 router.put('/:typeId',
