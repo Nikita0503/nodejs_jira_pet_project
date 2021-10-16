@@ -45,6 +45,10 @@ class UserController {
 
     async editUser(req, res, next){
         try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
             const token = req.headers.authorization.split(' ')[1];
             const {name} = req.body;
             const avatar = req.files?.avatar;

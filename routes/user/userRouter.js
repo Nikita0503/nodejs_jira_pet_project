@@ -1,5 +1,7 @@
 const Router = require('express');
-const {loginValidators, registrationValidators} = require('../../middlewares/validators/userRouterValidators');
+const {loginValidators, 
+    registrationValidators,
+    editUserValidators} = require('../../middlewares/validators/userRouterValidators');
 const authMiddleware = require('../../middlewares/authMiddleware');
 const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
 const UserController = require('../../controllers/userController');
@@ -19,6 +21,7 @@ router.post('/registration',
 
 router.put('/',
     authMiddleware,
+    ...editUserValidators(),
     UserController.editUser);
 
 router.delete('/avatar', 
