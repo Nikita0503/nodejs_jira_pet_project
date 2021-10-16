@@ -3,15 +3,15 @@ const FileService = require('../service/FileService');
 const {validationResult} = require('express-validator');
 
 class TaskController {
-    async saveFile(req, res, next){
+    async attachFile(req, res, next){
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {taskId, commentId} = req.body;
-            const {file} = req.files;
-            const fileInfo = await FileService.saveFile(file, {
+            const file = req.files.file;
+            const fileInfo = await FileService.attachFile(file, {
                 taskId,
                 commentId
             });
@@ -21,14 +21,14 @@ class TaskController {
         }
     }
    
-    async deleteFile(req, res, next){
+    async detachFile(req, res, next){
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {fileId} = req.params;
-            const isDone = await FileService.deleteFile(fileId);
+            const isDone = await FileService.detachFile(fileId);
             res.json({deleted: isDone});
         } catch (e) {
             next(e);

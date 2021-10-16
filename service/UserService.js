@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require("../models/models");
 const ApiError = require("../errors/ApiError");
+const FileService = require('./FileService');
 
 const generateToken = (id, email, name, role) => {
     return jwt.sign(
@@ -25,13 +26,17 @@ class UserService {
         return token;
     }
 
-    async registration(email, password, name, role){
+    async registration(email, password, name, role, avatar){
         const candidate = await User.findOne({where: {email}});
         if(candidate){
             throw ApiError.internal(`User with email '${email}' already exist`);
         }
         const hashPassword = await bcrypt.hash(password, 3);
-        const user = await User.create({email, password: hashPassword, name, role});
+        let avatarData;
+        if(avatar){
+            avatarData = await FileService.saveFile(avatar);
+        }
+        const user = await User.create({email, password: hashPassword, name, role, avatar: avatarData?.fileName});
         const token = generateToken(user.id, user.email, user.name, user.role);
         return token;
     }
@@ -39,6 +44,34 @@ class UserService {
     async getAllUsers(){
         const users = await User.findAll();
         return users;
+    }
+
+    async editUser(token, name, avatar){
+        const candidate = jwt.decode(token);
+        const user = await User.findOne({where: {id: candidate.id}});
+        if(!user){
+            throw ApiError.badRequest('User not found')
+        }
+        let avatarData;
+        if(avatar){
+            if(user.avatar){
+                FileService.deleteFile(user.avatar);
+            }
+            avatarData = await FileService.saveFile(avatar);
+        }
+        const updatedUserId = await User.update({name, avatar: avatarData?.fileName}, {where: {id: user.id}});
+        return !!updatedUserId;
+    }
+
+    async deleteAvatar(token){
+        const candidate = jwt.decode(token);
+        const user = await User.findOne({where: {id: candidate.id}});
+        if(!user){
+            throw ApiError.badRequest('User not found')
+        }
+        FileService.deleteFile(user.avatar);
+        const updatedUserId = await User.update({avatar: null}, {where: {id: user.id}});
+        return !!updatedUserId;
     }
 }
 

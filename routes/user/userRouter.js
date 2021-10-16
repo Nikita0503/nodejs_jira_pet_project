@@ -17,4 +17,12 @@ router.post('/registration',
     ...registrationValidators(),
     UserController.registration);
 
+router.put('/',
+    authMiddleware,
+    UserController.editUser);
+
+router.delete('/avatar', 
+    authMiddleware,
+    UserController.deleteAvatar);
+
 module.exports = router;

@@ -1,5 +1,5 @@
 const {check} = require('express-validator');
-//TODO: make validators
+
 const getCommentsValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),

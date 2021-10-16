@@ -32,8 +32,6 @@ class CommentController {
             return res.json({comment})
         } catch (e) {
             next(e);
-            console.log(e)
-
         }
     }
 
