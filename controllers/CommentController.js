@@ -43,9 +43,10 @@ class CommentController {
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
-            const {statusId} = req.params;
-            const {title, color} = req.body;
-            const isDone = await StatusService.editStatus(statusId, title, color);
+            const {projectId, taskId, commentId} = req.params;
+            const {message} = req.body;
+            const token = req.headers.authorization.split(' ')[1];
+            const isDone = await CommentService.editComment(projectId, taskId, commentId, token, message);
             return res.json({updated: isDone})
         } catch (e) {
             next(e);
@@ -58,8 +59,9 @@ class CommentController {
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
-            const {statusId} = req.params;
-            const isDone = await StatusService.deleteComment(statusId);
+            const {projectId, taskId, commentId} = req.params;
+            const token = req.headers.authorization.split(' ')[1];
+            const isDone = await CommentService.deleteComment(projectId, taskId, commentId, token);
             return res.json({deleted: isDone})
         } catch (e) {
             next(e);

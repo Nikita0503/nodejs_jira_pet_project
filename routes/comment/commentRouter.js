@@ -19,12 +19,12 @@ router.post('/',
     ...createCommentValidators(),
     CommentController.createComment);
 
-router.put('/:typeId',
+router.put('/:commentId',
     checkRoleMiddleware('ADMIN'),
     ...editCommentValidators(),
     CommentController.editComment);
 
-router.delete('/:typeId',
+router.delete('/:commentId',
     checkRoleMiddleware('ADMIN'),
     ...deleteCommentValidators(),
     CommentController.deleteComment);

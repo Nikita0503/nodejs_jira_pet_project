@@ -36,12 +36,24 @@ class CommentService {
         return comment;
     }
 
-    async editComment(){
-        
+    async editComment(projectId, taskId, commentId, token, message){
+        await validateUser(projectId, taskId, token);
+        const comment = await Comment.findOne({where: {id: commentId}});
+        if(!comment){
+            throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
+        }
+        const updatedCommentId = await Comment.update({message}, {where: {id: commentId}});
+        return !!updatedCommentId;
     }
 
-    async deleteComment(){
-        
+    async deleteComment(projectId, taskId, commentId, token){
+        await validateUser(projectId, taskId, token);
+        const comment = await Comment.findOne({where: {id: commentId}});
+        if(!comment){
+            throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
+        }
+        const deletedCommentId = await Comment.destroy({where: {id: commentId}});
+        return !!deletedCommentId;
     }
 }
 
