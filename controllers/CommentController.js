@@ -4,7 +4,7 @@ const {validationResult} = require('express-validator');
 
 class CommentController {
 
-    async getComments(req, res, next){//TODO: get files + get files in getTasks()
+    async getComments(req, res, next){
         try{
             const errors = validationResult(req);
             if(!errors.isEmpty()){
@@ -27,8 +27,9 @@ class CommentController {
             }
             const {projectId, taskId} = req.params;
             const {message} = req.body;
+            const files = req.files?.file;
             const token = req.headers.authorization.split(' ')[1];
-            const comment = await CommentService.createComment(projectId, taskId, token, message);
+            const comment = await CommentService.createComment(projectId, taskId, token, message, files);
             return res.json({comment})
         } catch (e) {
             next(e);
@@ -43,8 +44,9 @@ class CommentController {
             }
             const {projectId, taskId, commentId} = req.params;
             const {message} = req.body;
+            const files = req.files?.file;
             const token = req.headers.authorization.split(' ')[1];
-            const isDone = await CommentService.editComment(projectId, taskId, commentId, token, message);
+            const isDone = await CommentService.editComment(projectId, taskId, commentId, token, message, files);
             return res.json({updated: isDone})
         } catch (e) {
             next(e);

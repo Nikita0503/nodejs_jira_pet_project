@@ -23,7 +23,8 @@ class TaskController {
             }
             const {projectId} = req.params;
             const {title, description, timeAllotted, statusId, typeId, userId} = req.body;
-            const task = await TaskService.createTask(projectId, title, description, timeAllotted, statusId, typeId, userId);
+            const files = req.files?.file;
+            const task = await TaskService.createTask(projectId, title, description, timeAllotted, statusId, typeId, userId, files);
             return res.json({task})
         } catch (e) {
             next(e);
@@ -38,7 +39,8 @@ class TaskController {
             }
             const {projectId, taskId} = req.params;
             const {title, description, timeAllotted, timeTracked, statusId, typeId, userId} = req.body;
-            const isDone = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId);
+            const files = req.files?.file;
+            const isDone = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId, files);
             return res.json({updated: isDone})
         } catch (e) {
             next(e);
