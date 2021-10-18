@@ -42,7 +42,7 @@ class UserService {
     }
 
     async getAllUsers(){
-        const users = await User.findAll();
+        const users = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']}});
         return users;
     }
 

@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 
 class StatusService {
     async getAllStatuses(){
-        const statuses = await Status.findAll();
+        const statuses = await Status.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
         return statuses;
     }
 

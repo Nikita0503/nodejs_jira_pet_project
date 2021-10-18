@@ -1,12 +1,26 @@
 const { Task, Project, User, ProjectUser, Status, Type, File } = require("../models/models");
 const ApiError = require("../errors/ApiError");
-const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 const FileService = require('./FileService');
 
-async function getTaskFiles(taskId){
-    const files = await File.findAll({where: {taskId}})
-    return files;
+async function formTask(id){
+    const task = await Task.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
+    let formedTask = {...task.dataValues};
+    delete formedTask.typeId;
+    delete formedTask.statusId;
+    delete formedTask.projectId;
+    delete formedTask.userId;
+    const files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
+    const status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
+    const type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
+    const user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
+    return {
+        ...formedTask,
+        status,
+        type,
+        user,
+        files
+    }
 }
 
 async function saveFilesOfNewTask(files, taskId){
@@ -26,16 +40,13 @@ class TaskService {
         if(!userInProject && user.role != 'ADMIN'){
             throw ApiError.forbidden('you do not have permissions to this resource')
         }
-        const tasks = await Task.findAll({where: {projectId}});
-        const tasksWithFiles = [];
+        const tasks = await Task.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}}, {where: {projectId}});
+        const formedTasks = [];
         for(let i = 0; i < tasks.length; i++){
-            const files = await getTaskFiles(tasks[i].id);
-            tasksWithFiles.push({
-                ...tasks[i].dataValues,
-                files
-            })
+            const formedTask = await formTask(tasks[i].id);
+            formedTasks.push(formedTask);
         }
-        return tasksWithFiles;
+        return formedTasks;
     }
 
     async createTask(projectId, title, description, timeAllotted, statusId, typeId, userId, files){
@@ -59,11 +70,8 @@ class TaskService {
         if(files){
             await saveFilesOfNewTask(files, task.id);
         }
-        const filesOfNewTask = await getTaskFiles(task.id);
-        return {
-            ...task.dataValues,
-            files: filesOfNewTask
-        };
+        const formedTask = await formTask(task.id);
+        return formedTask;
     }
 
     async editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId, files){
@@ -81,19 +89,24 @@ class TaskService {
                 throw ApiError.badRequest(`User with id ${userId} not found`)
             }
         }
-        const status = await Status.findOne({where: {id: statusId}});
-        if(!status){
-            throw ApiError.badRequest(`Status with id '${statusId}' not found`);
+        if(statusId){
+            const status = await Status.findOne({where: {id: statusId}});
+            if(!status){
+                throw ApiError.badRequest(`Status with id '${statusId}' not found`);
+            }
         }
-        const type = await Type.findOne({where: {id: typeId}});
-        if(!type){
-            throw ApiError.badRequest(`Type with id '${typeId}' not found`);
+        if(typeId){
+            const type = await Type.findOne({where: {id: typeId}});
+            if(!type){
+                throw ApiError.badRequest(`Type with id '${typeId}' not found`);
+            }
         }
-        const updatedTaskId = await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id: taskId}});
+        await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id: taskId}});
         if(files){
             await saveFilesOfNewTask(files, task.id);
         }
-        return !!updatedTaskId;
+        const formedTask = await formTask(task.id);
+        return formedTask;
     }
 
     async deleteTask(projectId, taskId){

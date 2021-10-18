@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 
 class TypeService {
     async getAllTypes(){
-        const types = await Type.findAll();
+        const types = await Type.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
         return types;
     }
 
