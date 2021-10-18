@@ -1,4 +1,4 @@
-const { Comment, Task, ProjectUser, Project, File } = require("../models/models");
+const { Comment, Task, ProjectUser, Project, File, User } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
@@ -23,9 +23,18 @@ async function validateUser(projectId, taskId, token){
     }
 }
 
-async function getCommentFiles(commentId){
-    const files = await File.findAll({where: {commentId}})
-    return files;
+async function formComment(id){
+    const comment = await Comment.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}})
+    let formedComment = {...comment.dataValues};
+    delete formedComment.taskId;
+    delete formedComment.userId;
+    const files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {commentId: comment.id}});
+    const user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: comment.userId}})
+    return {
+        ...formedComment,
+        user,
+        files
+    }
 }
 
 async function saveFilesOfNewComment(files, commentId){
@@ -42,15 +51,12 @@ class CommentService {
     async getComments(projectId, taskId, token){
         await validateUser(projectId, taskId, token);
         const comments = await Comment.findAll({where: {taskId}});
-        const commentsWithFiles = [];
+        const formedComments = [];
         for(let i = 0; i < comments.length; i++){
-            const files = await getCommentFiles(comments[i].id);
-            commentsWithFiles.push({
-                ...comments[i].dataValues,
-                files
-            })
+            const formedComment = await formComment(comments[i].id);
+            formedComments.push(formedComment);
         }
-        return commentsWithFiles;
+        return formedComments;
     }
 
     async createComment(projectId, taskId, token, message, files){
@@ -60,24 +66,22 @@ class CommentService {
         if(files){
             await saveFilesOfNewComment(files, comment.id);
         }
-        const filesOfNewComment = await getCommentFiles(comment.id);
-        return {
-            ...comment.dataValues,
-            files: filesOfNewComment
-        };
+        const formedComment = await formComment(comment.id);
+        return formedComment;
     }
 
-    async editComment(projectId, taskId, commentId, token, message, files){
+    async editComment(projectId, taskId, commentId, token, message, files){ //test creating and editing comments and task with additing 1 and several files
         await validateUser(projectId, taskId, token);
         const comment = await Comment.findOne({where: {id: commentId}});
         if(!comment){
             throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
         }
-        const updatedCommentId = await Comment.update({message}, {where: {id: commentId}});
+        await Comment.update({message}, {where: {id: commentId}});
         if(files){
             await saveFilesOfNewComment(files, comment.id);
         }
-        return !!updatedCommentId;
+        const formedComment = await formComment(comment.id);
+        return formedComment;
     }
 
     async deleteComment(projectId, taskId, commentId, token){

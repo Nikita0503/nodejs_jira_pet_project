@@ -3,7 +3,7 @@ const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
 class StatusService {
-    async getAllStatuses(){
+    async getAllStatuses(){//TODO: refactor: update should return instance;
         const statuses = await Status.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
         return statuses;
     }

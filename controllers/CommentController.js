@@ -46,8 +46,8 @@ class CommentController {
             const {message} = req.body;
             const files = req.files?.file;
             const token = req.headers.authorization.split(' ')[1];
-            const isDone = await CommentService.editComment(projectId, taskId, commentId, token, message, files);
-            return res.json({updated: isDone})
+            const comment = await CommentService.editComment(projectId, taskId, commentId, token, message, files);
+            return res.json({comment})
         } catch (e) {
             next(e);
         }
