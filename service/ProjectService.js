@@ -1,12 +1,31 @@
-const { Project, User, ProjectUser } = require("../models/models");
+const { Project, User, ProjectUser, Task } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 
+async function formProject(id){
+    const project = await Project.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
+    let formedProject = {...project.dataValues};
+    const tasksCount = await Task.count({where: {projectId: id}});
+    const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
+    const userIds = usersInProject.map(user => user.dataValues.userId);
+    const users = await User.findAll({where: {id: [...userIds]}});
+    return {
+        ...formedProject,
+        tasksCount,
+        users,
+    }
+}
+
 class ProjectService {
     async getAllProjects(){
         const projects = await Project.findAll();
-        return projects;
+        const formedProjects = [];
+        for(let i = 0; i < projects.length; i++){
+            const formedProject = await formProject(projects[i].id);
+            formedProjects.push(formedProject);
+        }
+        return formedProjects;
     }
 
     async createProject(title, description){
@@ -15,7 +34,8 @@ class ProjectService {
             throw ApiError.internal(`Project with title '${title}' already exist`);
         }
         const project = await Project.create({title, description});
-        return project;
+        const formedProject = await formProject(project.id);
+        return formedProject;
     }
 
     async editProject(projectId, title, description){
@@ -29,8 +49,9 @@ class ProjectService {
                 throw ApiError.internal(`Project with title '${title}' already exist`);
             }
         }
-        const updatedProjectId = await Project.update({title, description}, {where: {id: projectId}});
-        return !!updatedProjectId;
+        await Project.update({title, description}, {where: {id: projectId}});
+        const formedProject = await formProject(projectId);
+        return formedProject;
     }
 
     async deleteProject(projectId){

@@ -30,7 +30,6 @@ class UserController {
             return res.json({token})
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 
@@ -56,7 +55,6 @@ class UserController {
             return res.json({updated: isDone})
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 

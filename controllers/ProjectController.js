@@ -10,6 +10,7 @@ class ProjectController {
             return res.json({projects})
         } catch (e) {
             next(e);
+            console.log(e)
         }
     }
 
@@ -35,10 +36,11 @@ class ProjectController {
             }
             const {projectId} = req.params;
             const {title, description} = req.body;
-            const isDone = await ProjectService.editProject(projectId, title, description);
-            return res.json({updated: isDone});
+            const project = await ProjectService.editProject(projectId, title, description);
+            return res.json({project});
         } catch (e) {
             next(e);
+            console.log(e)
         }
     }
 
