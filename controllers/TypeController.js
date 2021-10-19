@@ -35,8 +35,8 @@ class StatusController {
             }
             const {typeId} = req.params;
             const {title, color} = req.body;
-            const isDone = await TypeService.editType(typeId, title, color);
-            return res.json({updated: isDone})
+            const type = await TypeService.editType(typeId, title, color);
+            return res.json({type})
         } catch (e) {
             next(e);
         }

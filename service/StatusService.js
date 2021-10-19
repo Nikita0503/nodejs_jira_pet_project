@@ -2,8 +2,13 @@ const { Status } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
+async function formStatus(id){
+    const status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
+    return status
+}
+
 class StatusService {
-    async getAllStatuses(){//TODO: refactor: update should return instance;
+    async getAllStatuses(){
         const statuses = await Status.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
         return statuses;
     }
@@ -14,7 +19,8 @@ class StatusService {
             throw ApiError.internal(`Status with title '${title}' already exist`);
         }
         const status = await Status.create({title, color});
-        return status;
+        const formedStatus = await formStatus(status.id);
+        return formedStatus;
     }
 
     async editStatus(statusId, title, color){
@@ -28,8 +34,9 @@ class StatusService {
                 throw ApiError.internal(`Status with title '${title}' already exist`);
             }
         }
-        const updatedStatusId = await Status.update({title, color}, {where: {id: statusId}});
-        return !!updatedStatusId;
+        await Status.update({title, color}, {where: {id: statusId}});
+        const formedStatus = await formStatus(statusId);
+        return formedStatus;
     }
 
     async deleteService(statusId){

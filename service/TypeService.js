@@ -2,6 +2,11 @@ const { Type } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
+async function formType(id){
+    const type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
+    return type
+}
+
 class TypeService {
     async getAllTypes(){
         const types = await Type.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
@@ -14,7 +19,8 @@ class TypeService {
             throw ApiError.internal(`Type with title '${title}' already exist`);
         }
         const type = await Type.create({title, color});
-        return type;
+        const formedType = await formType(type.id);
+        return formedType;
     }
 
     async editType(typeId, title, color){
@@ -28,8 +34,9 @@ class TypeService {
                 throw ApiError.internal(`Type with title '${title}' already exist`);
             }
         }
-        const updatedTypeId = await Type.update({title, color}, {where: {id: typeId}});
-        return !!updatedTypeId;
+        await Type.update({title, color}, {where: {id: typeId}});
+        const formedType = await formType(typeId);
+        return formedType;
     }
 
     async deleteType(typeId){

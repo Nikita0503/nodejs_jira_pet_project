@@ -70,7 +70,7 @@ class CommentService {
         return formedComment;
     }
 
-    async editComment(projectId, taskId, commentId, token, message, files){ //test creating and editing comments and task with additing 1 and several files
+    async editComment(projectId, taskId, commentId, token, message, files){
         await validateUser(projectId, taskId, token);
         const comment = await Comment.findOne({where: {id: commentId}});
         if(!comment){
