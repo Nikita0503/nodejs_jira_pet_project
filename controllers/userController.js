@@ -63,6 +63,12 @@ class UserController {
         const isDone = await UserService.deleteAvatar(token)
         return res.json({updated: isDone})
     }
+
+    async getCurrentUser(req, res, next){
+        const token = req.headers.authorization.split(' ')[1];
+        const user = await UserService.getCurrentUser(token);
+        return res.json({user}); 
+    }
 }
 
 module.exports = new UserController();

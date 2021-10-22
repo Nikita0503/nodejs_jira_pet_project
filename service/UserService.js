@@ -73,6 +73,15 @@ class UserService {
         const updatedUserId = await User.update({avatar: null}, {where: {id: user.id}});
         return !!updatedUserId;
     }
+
+    async getCurrentUser(token){
+        const candidate = jwt.decode(token);
+        const user = await User.findOne({attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: {id: candidate.id}});
+        if(!user){
+            throw ApiError.badRequest('User not found')
+        }
+        return user;
+    }
 }
 
 module.exports = new UserService();

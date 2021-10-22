@@ -28,4 +28,8 @@ router.delete('/avatar',
     authMiddleware,
     UserController.deleteAvatar);
 
+router.post('/me', 
+    authMiddleware,
+    UserController.getCurrentUser);
+
 module.exports = router;

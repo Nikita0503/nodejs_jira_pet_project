@@ -2,6 +2,7 @@ const ApiError = require("../errors/ApiError");
 const jwt = require('jsonwebtoken');
 
 module.exports = function (req, res, next){
+    console.log(req.headers.authorization)
     if(req.method === 'OPTIONS'){
         next();
     }
