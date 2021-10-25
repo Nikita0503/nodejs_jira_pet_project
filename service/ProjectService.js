@@ -9,7 +9,7 @@ async function formProject(id){
     const tasksCount = await Task.count({where: {projectId: id}});
     const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
     const userIds = usersInProject.map(user => user.dataValues.userId);
-    const users = await User.findAll({where: {id: [...userIds]}});
+    const users = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: {id: [...userIds]}});
     return {
         ...formedProject,
         tasksCount,
