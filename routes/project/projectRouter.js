@@ -1,7 +1,8 @@
 const Router = require('express');
 const taskRouter = require('../task/taskRouter');
 
-const {createProjectValidators, 
+const {existsProjectValidators,
+    createProjectValidators, 
     editProjectValidators, 
     deleteProjectValidators,
     addUserToProjectValidators,
@@ -18,6 +19,11 @@ router.use('/:projectId/tasks', taskRouter);
 router.get('/',
     authMiddleware,
     ProjectController.getAllProjects);
+
+router.post('/exists',
+    authMiddleware,
+    ...existsProjectValidators(),
+    ProjectController.existsProject)
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),

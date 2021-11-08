@@ -14,6 +14,16 @@ class ProjectController {
         }
     }
 
+    async existsProject(req, res, next){
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return next(ApiError.badRequest("Invalid data", errors))
+        }
+        const {title} = req.body;
+        const project = await ProjectService.existsProject(title);
+        return res.json({exist: !!project})
+    }
+
     async createProject(req, res, next){
         try{
             const errors = validationResult(req);

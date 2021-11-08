@@ -1,5 +1,11 @@
 const {check} = require('express-validator');
 
+const existsProjectValidators = () => {
+    return [
+        check('title').notEmpty().withMessage('Title is required'),
+    ];  
+};
+
 const createProjectValidators = () => {
     return [
         check('title').notEmpty().withMessage('Title is required'),
@@ -39,6 +45,7 @@ const deleteUserFromProjectValidators = () => {
 };
 
 module.exports = {
+    existsProjectValidators,
     createProjectValidators,
     editProjectValidators,
     deleteProjectValidators,

@@ -28,6 +28,11 @@ class ProjectService {
         return formedProjects;
     }
 
+    async existsProject(title){
+        const project = await Project.findOne({where: {title: title.toString()}});
+        return project;
+    }
+
     async createProject(title, description){
         const candidate = await Project.findOne({where: {title: title.toString()}});
         if(candidate){
