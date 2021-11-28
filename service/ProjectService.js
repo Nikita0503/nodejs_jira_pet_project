@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 
 async function formProject(id){
-    const project = await Project.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
+    const project = await Project.findOne({attributes: {exclude: ['createdAt']}, where: {id}});
     let formedProject = {...project.dataValues};
     const tasksCount = await Task.count({where: {projectId: id}});
     const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
