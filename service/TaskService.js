@@ -40,7 +40,7 @@ class TaskService {
         if(!userInProject && user.role != 'ADMIN'){
             throw ApiError.forbidden('you do not have permissions to this resource')
         }
-        const tasks = await Task.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}}, {where: {projectId}});
+        const tasks = await Task.findAll({where: {projectId}});
         const formedTasks = [];
         for(let i = 0; i < tasks.length; i++){
             const formedTask = await formTask(tasks[i].id);
