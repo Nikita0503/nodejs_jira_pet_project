@@ -26,7 +26,7 @@ async function formTask(id){
 async function saveFilesOfNewTask(files, taskId){
     if(files.length > 0){
         for(let i = 0; i < files.length; i++){
-            await FileService.attachFile(files[0], {taskId});
+            await FileService.attachFile(files[i], {taskId});
         }
     }else{
         await FileService.attachFile(files, {taskId});
