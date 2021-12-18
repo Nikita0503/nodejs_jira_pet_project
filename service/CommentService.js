@@ -24,7 +24,7 @@ async function validateUser(projectId, taskId, token){
 }
 
 async function formComment(id){
-    const comment = await Comment.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}})
+    const comment = await Comment.findOne({attributes: {exclude: ['updatedAt']}, where: {id}})
     let formedComment = {...comment.dataValues};
     delete formedComment.taskId;
     delete formedComment.userId;
@@ -40,7 +40,7 @@ async function formComment(id){
 async function saveFilesOfNewComment(files, commentId){
     if(files.length > 0){
         for(let i = 0; i < files.length; i++){
-            await FileService.attachFile(files[0], {commentId});
+            await FileService.attachFile(files[i], {commentId});
         }
     }else{
         await FileService.attachFile(files, {commentId});

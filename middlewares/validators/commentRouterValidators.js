@@ -11,7 +11,7 @@ const createCommentValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),
         check('taskId').isNumeric().withMessage('Must be a number'),
-        check('message').notEmpty().withMessage('Must be a number'),
+        check('message').notEmpty().withMessage('Message is required'),
     ];  
 };
 
