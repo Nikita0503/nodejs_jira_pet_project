@@ -88,7 +88,7 @@ class ProjectService {
         return formedProject;
     }
 
-    async getProject(projectId){
+    async getFullProject(projectId){
         const projectExists = await Project.findOne({where: {id: projectId}});
         let project = {};
         if(!!projectExists) {

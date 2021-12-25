@@ -32,7 +32,7 @@ router.post('/',
 
 router.get('/:projectId',
     authMiddleware,
-    ProjectController.getProject);
+    ProjectController.getFullProject);
 
 router.put('/:projectId', 
     checkRoleMiddleware('ADMIN'),
