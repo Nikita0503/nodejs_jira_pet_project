@@ -38,7 +38,7 @@ class TaskService {
         const user = jwt.decode(token);
         const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
         if(!userInProject && user.role != 'ADMIN'){
-            throw ApiError.forbidden('you do not have permissions to this resource')
+            throw ApiError.forbidden('You do not have permissions to this resource')
         }
         const tasks = await Task.findAll({where: {projectId}});
         const formedTasks = [];

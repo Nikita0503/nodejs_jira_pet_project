@@ -30,6 +30,10 @@ router.post('/',
     ...createProjectValidators(),
     ProjectController.createProject);
 
+router.get('/:projectId',
+    authMiddleware,
+    ProjectController.getProject);
+
 router.put('/:projectId', 
     checkRoleMiddleware('ADMIN'),
     ...editProjectValidators(),

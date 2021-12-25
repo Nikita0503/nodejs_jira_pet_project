@@ -1,4 +1,4 @@
-const { Status } = require("../models/models");
+const { Status, Task } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
@@ -45,6 +45,7 @@ class StatusService {
             throw ApiError.internal(`Status with id '${statusId}' not found`);
         }
         const deletedStatusId = await Status.destroy({where: {id: statusId}});
+        const l = await Task.destroy({where: {statusId}});
         return !!deletedStatusId;
     }
 }
