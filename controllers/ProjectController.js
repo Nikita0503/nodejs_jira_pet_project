@@ -6,7 +6,8 @@ class ProjectController {
 
     async getAllProjects(req, res, next){
         try{
-            const projects = await ProjectService.getAllProjects();
+            const token = req.headers.authorization.split(' ')[1];
+            const projects = await ProjectService.getAllProjects(token);
             return res.json({projects})
         } catch (e) {
             next(e);

@@ -24,7 +24,7 @@ router.post('/',
     TaskController.createTask);
 
 router.put('/:taskId', 
-    checkRoleMiddleware('ADMIN'),
+    authMiddleware,
     ...editTaskValidators(),
     TaskController.editTask);
 

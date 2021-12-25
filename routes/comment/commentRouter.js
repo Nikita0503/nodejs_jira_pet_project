@@ -15,17 +15,17 @@ router.get('/',
     CommentController.getComments);
 
 router.post('/',
-    checkRoleMiddleware('ADMIN'),
+    authMiddleware,
     ...createCommentValidators(),
     CommentController.createComment);
 
 router.put('/:commentId',
-    checkRoleMiddleware('ADMIN'),
+    authMiddleware,
     ...editCommentValidators(),
     CommentController.editComment);
 
 router.delete('/:commentId',
-    checkRoleMiddleware('ADMIN'),
+    authMiddleware,
     ...deleteCommentValidators(),
     CommentController.deleteComment);
 

@@ -18,8 +18,19 @@ async function formProject(id){
 }
 
 class ProjectService {
-    async getAllProjects(){
-        const projects = await Project.findAll();
+    async getAllProjects(token){
+        const user = jwt.decode(token);
+        let projects;
+        if(user.role === "ADMIN"){
+            projects = await Project.findAll();
+        }else{
+            const userInProjects = await ProjectUser.findAll({where: {userId: user.id}}); 
+            projects = [];
+            for(let i = 0; i < userInProjects.length; i++){
+                const project = await Project.findOne({where: userInProjects[i].dataValues.projectId});
+                projects.push(project);
+            }
+        } 
         const formedProjects = [];
         for(let i = 0; i < projects.length; i++){
             const formedProject = await formProject(projects[i].id);
