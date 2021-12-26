@@ -38,7 +38,7 @@ class TaskService {
         const user = jwt.decode(token);
         const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
         if(!userInProject && user.role != 'ADMIN'){
-            throw ApiError.forbidden('you do not have permissions to this resource')
+            throw ApiError.forbidden('You do not have permissions to this resource')
         }
         const tasks = await Task.findAll({where: {projectId}});
         const formedTasks = [];
@@ -54,9 +54,10 @@ class TaskService {
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
-        const user = await User.findOne({where: {id: userId}});
-        if(!user){
-            throw ApiError.badRequest(`User with id ${userId} not found`)
+        const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
+        const userIdsInProject = usersInProject.map(user => user.dataValues.userId);
+        if( !userIdsInProject.includes(Number.parseInt(userId)) ){
+            throw ApiError.badRequest(`User with id ${userId} not found in project`)
         }
         const status = await Status.findOne({where: {id: statusId}});
         if(!status){

@@ -1,4 +1,4 @@
-const { Project, User, ProjectUser, Task } = require("../models/models");
+const { Project, User, ProjectUser, Task, Status, Type, File } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
@@ -14,6 +14,41 @@ async function formProject(id){
         ...formedProject,
         tasksCount,
         users,
+    }
+}
+
+async function formFullProject(id){
+    const project = await Project.findOne({attributes: {exclude: ['createdAt']}, where: {id}});
+    let formedProject = {...project.dataValues};
+    const tasksCount = await Task.count({where: {projectId: id}});
+    const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
+    const userIds = usersInProject.map(user => user.dataValues.userId);
+    const users = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: {id: [...userIds]}});
+
+    const tasksInProject = await Task.findAll({where: {projectId: id}});
+
+    let tasks = [];
+    for(let task of tasksInProject){
+        
+        const tasks_status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
+        const tasks_files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
+        const tasks_type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
+        const tasks_user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
+
+        tasks.push({
+            ...task.dataValues,
+            status: tasks_status,
+            type: tasks_type,
+            user: tasks_user,
+            files: tasks_files
+        })
+    }
+
+    return {
+        ...formedProject,
+        tasksCount,
+        users,
+        tasks
     }
 }
 
@@ -52,6 +87,17 @@ class ProjectService {
         const project = await Project.create({title, description});
         const formedProject = await formProject(project.id);
         return formedProject;
+    }
+
+    async getFullProject(projectId){
+        const projectExists = await Project.findOne({where: {id: projectId}});
+        let project = {};
+        if(!!projectExists) {
+            project = await formFullProject(projectId);
+        }else{
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        return project;
     }
 
     async editProject(projectId, title, description){

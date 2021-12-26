@@ -39,6 +39,17 @@ class ProjectController {
         }
     }
 
+    async getFullProject(req, res, next){
+        try{
+            const { projectId } = req.params;
+            const project = await ProjectService.getFullProject(projectId);
+            return res.json({project})
+        } catch (e) {
+            next(e);
+            console.log(e)
+        }
+    }
+
     async editProject(req, res, next){
         try{
             const errors = validationResult(req);

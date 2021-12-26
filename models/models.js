@@ -52,22 +52,22 @@ const ProjectUser = sequelize.define('project_user', {
 });
 
 
-Project.hasMany(Task);
+Project.hasMany(Task, {onDelete: 'cascade'});
 Task.belongsTo(Project);
 
 Project.belongsToMany(User, {through: ProjectUser});
 User.belongsToMany(Project, {through: ProjectUser});
 
-Task.hasMany(Comment);
+Task.hasMany(Comment, {onDelete: 'cascade'});
 Comment.belongsTo(Task);
 
-Task.hasMany(File);
+Task.hasMany(File, {onDelete: 'cascade'});
 File.belongsTo(Task);
 
-Comment.hasMany(File);
+Comment.hasMany(File, {onDelete: 'cascade'});
 File.belongsTo(Comment);
 
-Status.hasMany(Task);
+Status.hasMany(Task, {onDelete: 'cascade'});
 Task.belongsTo(Status);
 
 Type.hasMany(Task);

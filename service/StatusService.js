@@ -1,4 +1,4 @@
-const { Status } = require("../models/models");
+const { Status, Task } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const { Op } = require("sequelize");
 
