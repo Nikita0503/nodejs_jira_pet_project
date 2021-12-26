@@ -54,9 +54,10 @@ class TaskService {
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
         }
-        const user = await User.findOne({where: {id: userId}});
-        if(!user){
-            throw ApiError.badRequest(`User with id ${userId} not found`)
+        const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
+        const userIdsInProject = usersInProject.map(user => user.dataValues.userId);
+        if( !userIdsInProject.includes(userId) ){
+            throw ApiError.badRequest(`User with id ${userId} not found in project`)
         }
         const status = await Status.findOne({where: {id: statusId}});
         if(!status){
