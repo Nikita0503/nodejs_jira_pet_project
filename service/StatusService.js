@@ -45,7 +45,6 @@ class StatusService {
             throw ApiError.internal(`Status with id '${statusId}' not found`);
         }
         const deletedStatusId = await Status.destroy({where: {id: statusId}});
-        await Task.destroy({where: {statusId}});
         return !!deletedStatusId;
     }
 }

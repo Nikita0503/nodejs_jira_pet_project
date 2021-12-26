@@ -30,23 +30,18 @@ async function formFullProject(id){
     let tasks = [];
     for(let task of tasksInProject){
         
-        let tasks_status;
-        if(task.statusId)
-            tasks_status= await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
-        else continue;
-
+        const tasks_status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
         const tasks_files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
         const tasks_type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
         const tasks_user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
 
-        if(!!tasks_status)
-            tasks.push({
-                ...task.dataValues,
-                status: tasks_status,
-                type: tasks_type,
-                user: tasks_user,
-                files: tasks_files
-            })
+        tasks.push({
+            ...task.dataValues,
+            status: tasks_status,
+            type: tasks_type,
+            user: tasks_user,
+            files: tasks_files
+        })
     }
 
     return {
