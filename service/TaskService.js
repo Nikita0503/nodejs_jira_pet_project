@@ -56,7 +56,7 @@ class TaskService {
         }
         const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
         const userIdsInProject = usersInProject.map(user => user.dataValues.userId);
-        if( !userIdsInProject.includes(userId) ){
+        if( !userIdsInProject.includes(Number.parseInt(userId)) ){
             throw ApiError.badRequest(`User with id ${userId} not found in project`)
         }
         const status = await Status.findOne({where: {id: statusId}});
