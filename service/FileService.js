@@ -5,31 +5,30 @@ const fs = require('fs');
 const ApiError = require("../errors/ApiError");
 
 class FileService {
-
-    async attachFile(file, ids){
+    async attachFile(file, ids) {
         const addedFileData = await this.saveFile(file); 
-        const fileInfo = await File.create({name: addedFileData.fileName, path: addedFileData.filePath, ...ids})
+        const fileInfo = await File.create({ name: addedFileData.fileName, path: addedFileData.filePath, ...ids });
         return fileInfo.name;
     }
 
-    async saveFile(file){
+    async saveFile(file) {
         const fileName = uuid.v4() + '.jpg';
         const filePath = path.resolve('static', fileName);
         await file.mv(filePath);
-        return {fileName, filePath};
+        return { fileName, filePath };
     }
 
-    async detachFile(fileId){
-        const file = await File.findOne({where: {id: fileId}});
-        if(!file){
+    async detachFile(fileId) {
+        const file = await File.findById(fileId);
+        if (!file) {
             throw ApiError.badRequest(`File with id '${fileId}' not found`);
         }
-        this.deleteFile(file.name);
-        const deletedFileId = File.destroy({where: {id: fileId}});
-        return !!deletedFileId;
+        await this.deleteFile(file.name);
+        const deletedFile = await File.deleteOne({ _id: fileId });
+        return deletedFile.deletedCount > 0;
     }
 
-    async deleteFile(fileName){
+    async deleteFile(fileName) {
         const filePath = path.resolve('static', fileName);
         fs.unlinkSync(filePath);    
     }

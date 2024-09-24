@@ -1,51 +1,51 @@
 const { Type } = require("../models/models");
 const ApiError = require("../errors/ApiError");
-const { Op } = require("sequelize");
 
-async function formType(id){
-    const type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
-    return type
+async function formType(id) {
+    const type = await Type.findById(id).select('-createdAt -updatedAt');
+    if (!type) {
+        throw ApiError.internal(`Type with id '${id}' not found`);
+    }
+    return type;
 }
 
 class TypeService {
-    async getAllTypes(){
-        const types = await Type.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
+    async getAllTypes() {
+        const types = await Type.find().select('-createdAt -updatedAt');
         return types;
     }
 
-    async createType(title, color){
-        const candidate = await Type.findOne({where: {title: title.toString()}});
-        if(candidate){
-            throw ApiError.internal(`Type with title '${title}' already exist`);
+    async createType(title, color) {
+        const candidate = await Type.findOne({ title: title.toString() });
+        if (candidate) {
+            throw ApiError.internal(`Type with title '${title}' already exists`);
         }
-        const type = await Type.create({title, color});
-        const formedType = await formType(type.id);
-        return formedType;
+        const type = await Type.create({ title, color });
+        return await formType(type._id);
     }
 
-    async editType(typeId, title, color){
-        let type = await Type.findOne({where: {id: typeId}});
-        if(!type){
+    async editType(typeId, title, color) {
+        let type = await Type.findById(typeId);
+        if (!type) {
             throw ApiError.internal(`Type with id '${typeId}' not found`);
         }
-        if(title){
-            type = await Type.findOne({where: {title: title.toString(), id: {[Op.ne]: [typeId]}}});
-            if(type){
-                throw ApiError.internal(`Type with title '${title}' already exist`);
+        if (title) {
+            const existingType = await Type.findOne({ title: title.toString(), _id: { $ne: typeId } });
+            if (existingType) {
+                throw ApiError.internal(`Type with title '${title}' already exists`);
             }
         }
-        await Type.update({title, color}, {where: {id: typeId}});
-        const formedType = await formType(typeId);
-        return formedType;
+        await Type.updateOne({ _id: typeId }, { title, color });
+        return await formType(typeId);
     }
 
-    async deleteType(typeId){
-        const type = await Type.findOne({where: {id: typeId}});
-        if(!type){
+    async deleteType(typeId) {
+        const type = await Type.findById(typeId);
+        if (!type) {
             throw ApiError.internal(`Type with id '${typeId}' not found`);
         }
-        const deletedTypeId = await Type.destroy({where: {id: typeId}});
-        return !!deletedTypeId;
+        const deletedType = await Type.deleteOne({ _id: typeId });
+        return deletedType.deletedCount > 0;
     }
 }
 

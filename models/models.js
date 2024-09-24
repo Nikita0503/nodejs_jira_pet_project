@@ -1,83 +1,66 @@
-const sequelize = require('../db');
-const {DataTypes} = require('sequelize');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Project = sequelize.define('project', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    title: {type: DataTypes.STRING, unique: true, allowNull: false},
-    description: {type: DataTypes.STRING}
+const ProjectSchema = new Schema({
+    title: { type: String, unique: true, required: true },
+    description: { type: String },
 });
 
-const Task = sequelize.define('task', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    title: {type: DataTypes.STRING, allowNull: false},
-    description: {type: DataTypes.STRING, allowNull: false},
-    timeTracked: {type: DataTypes.BIGINT},
-    timeAllotted: {type: DataTypes.BIGINT},
+const TaskSchema = new Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    timeTracked: { type: Number },
+    timeAllotted: { type: Number },
+    project: { type: Schema.Types.ObjectId, ref: 'Project' },
+    status: { type: Schema.Types.ObjectId, ref: 'Status' },
+    type: { type: Schema.Types.ObjectId, ref: 'Type' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-const Comment = sequelize.define('comment', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    message: {type: DataTypes.STRING, allowNull: false}
+const CommentSchema = new Schema({
+    message: { type: String, required: true },
+    task: { type: Schema.Types.ObjectId, ref: 'Task' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-const Status = sequelize.define('status', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    title: {type: DataTypes.STRING, unique: true, allowNull: false},
-    color: {type: DataTypes.STRING, allowNull: false}
+const FileSchema = new Schema({
+    name: { type: String, required: true },
+    path: { type: String, required: true },
+    task: { type: Schema.Types.ObjectId, ref: 'Task' },
+    comment: { type: Schema.Types.ObjectId, ref: 'Comment' },
 });
 
-const Type = sequelize.define('type', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    title: {type: DataTypes.STRING, unique: true, allowNull: false},
-    color: {type: DataTypes.STRING, allowNull: false}
+const StatusSchema = new Schema({
+    title: { type: String, unique: true, required: true },
+    color: { type: String, required: true }
 });
 
-const User = sequelize.define('user', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
-    email: {type: DataTypes.STRING, unique: true, allowNull: false},
-    password: {type: DataTypes.STRING, allowNull: false},
-    role: {type: DataTypes.STRING, defaultValue: "USER"},
-    avatar: {type: DataTypes.STRING},
+const TypeSchema = new Schema({
+    title: { type: String, unique: true, required: true },
+    color: { type: String, required: true }
 });
 
-const File = sequelize.define('file', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
-    path: {type: DataTypes.STRING, allowNull: false}
-})
-
-const ProjectUser = sequelize.define('project_user', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+const UserSchema = new Schema({
+    name: { type: String, required: true },
+    email: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    role: { type: String, default: 'USER' },
+    avatar: { type: String }
 });
 
+const ProjectUserSchema = new Schema({
+    project: { type: Schema.Types.ObjectId, ref: 'Project' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' }
+});
 
-Project.hasMany(Task, {onDelete: 'cascade'});
-Task.belongsTo(Project);
-
-Project.belongsToMany(User, {through: ProjectUser});
-User.belongsToMany(Project, {through: ProjectUser});
-
-Task.hasMany(Comment, {onDelete: 'cascade'});
-Comment.belongsTo(Task);
-
-Task.hasMany(File, {onDelete: 'cascade'});
-File.belongsTo(Task);
-
-Comment.hasMany(File, {onDelete: 'cascade'});
-File.belongsTo(Comment);
-
-Status.hasMany(Task, {onDelete: 'cascade'});
-Task.belongsTo(Status);
-
-Type.hasMany(Task);
-Task.belongsTo(Type);
-
-User.hasMany(Task);
-Task.belongsTo(User);
-
-User.hasMany(Comment);
-Comment.belongsTo(User);
+const Project = mongoose.model('Project', ProjectSchema);
+const Task = mongoose.model('Task', TaskSchema);
+const Comment = mongoose.model('Comment', CommentSchema);
+const File = mongoose.model('File', FileSchema);
+const Status = mongoose.model('Status', StatusSchema);
+const Type = mongoose.model('Type', TypeSchema);
+const User = mongoose.model('User', UserSchema);
+const ProjectUser = mongoose.model('ProjectUser', ProjectUserSchema);
 
 module.exports = {
     Project,
@@ -88,4 +71,4 @@ module.exports = {
     User,
     File,
     ProjectUser
-}
+};

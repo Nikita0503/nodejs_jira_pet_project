@@ -1,8 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const sequelize = require('./db');
-const models = require('./models/models');
+const mongoose = require('mongoose'); // Подключаем mongoose для работы с MongoDB
 const cors = require('cors');
 const router = require('./routes/index');
 const fileUpload = require('express-fileupload');
@@ -18,14 +17,22 @@ app.use(fileUpload({}));
 app.use('/api', router);
 app.use(errorHandler);
 
+const connectMongoDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log('MongoDB подключена');
+    } catch (err) {
+        console.log('Ошибка подключения к MongoDB:', err);
+    }
+};
+
 const start = async () => {
     try {
-        await sequelize.authenticate();
-        await sequelize.sync();
-        app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+        await connectMongoDB();
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
     } catch (e) {
-        console.log('db init', e)
+        console.log('Ошибка инициализации базы данных', e);
     }
-}
+};
 
 start();

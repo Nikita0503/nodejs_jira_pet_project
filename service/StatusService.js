@@ -1,51 +1,51 @@
 const { Status, Task } = require("../models/models");
 const ApiError = require("../errors/ApiError");
-const { Op } = require("sequelize");
 
-async function formStatus(id){
-    const status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
-    return status
+async function formStatus(id) {
+    const status = await Status.findById(id).select('-createdAt -updatedAt');
+    if (!status) {
+        throw ApiError.badRequest(`Status with id '${id}' not found`);
+    }
+    return status;
 }
 
 class StatusService {
-    async getAllStatuses(){
-        const statuses = await Status.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}});
+    async getAllStatuses() {
+        const statuses = await Status.find().select('-createdAt -updatedAt');
         return statuses;
     }
 
-    async createStatus(title, color){
-        const candidate = await Status.findOne({where: {title: title.toString()}});
-        if(candidate){
-            throw ApiError.internal(`Status with title '${title}' already exist`);
+    async createStatus(title, color) {
+        const candidate = await Status.findOne({ title: title.toString() });
+        if (candidate) {
+            throw ApiError.internal(`Status with title '${title}' already exists`);
         }
-        const status = await Status.create({title, color});
-        const formedStatus = await formStatus(status.id);
-        return formedStatus;
+        const status = await Status.create({ title, color });
+        return await formStatus(status._id);
     }
 
-    async editStatus(statusId, title, color){
-        let status = await Status.findOne({where: {id: statusId}});
-        if(!status){
-            throw ApiError.internal(`Status with id '${statusId}' not found`);
+    async editStatus(statusId, title, color) {
+        let status = await Status.findById(statusId);
+        if (!status) {
+            throw ApiError.badRequest(`Status with id '${statusId}' not found`);
         }
-        if(title){
-            status = await Status.findOne({where: {title: title.toString(), id: {[Op.ne]: [statusId]}}});
-            if(status){
-                throw ApiError.internal(`Status with title '${title}' already exist`);
+        if (title) {
+            const existingStatus = await Status.findOne({ title: title.toString(), _id: { $ne: statusId } });
+            if (existingStatus) {
+                throw ApiError.internal(`Status with title '${title}' already exists`);
             }
         }
-        await Status.update({title, color}, {where: {id: statusId}});
-        const formedStatus = await formStatus(statusId);
-        return formedStatus;
+        await Status.updateOne({ _id: statusId }, { title, color });
+        return await formStatus(statusId);
     }
 
-    async deleteService(statusId){
-        const status = await Status.findOne({where: {id: statusId}});
-        if(!status){
-            throw ApiError.internal(`Status with id '${statusId}' not found`);
+    async deleteStatus(statusId) {
+        const status = await Status.findById(statusId);
+        if (!status) {
+            throw ApiError.badRequest(`Status with id '${statusId}' not found`);
         }
-        const deletedStatusId = await Status.destroy({where: {id: statusId}});
-        return !!deletedStatusId;
+        const deletedStatus = await Status.deleteOne({ _id: statusId });
+        return deletedStatus.deletedCount > 0;
     }
 }
 
