@@ -20,9 +20,9 @@ app.use(errorHandler);
 const connectMongoDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URL);
-        console.log('MongoDB подключена');
+        console.log('MongoDB successfully connected!');
     } catch (err) {
-        console.log('Ошибка подключения к MongoDB:', err);
+        console.log('MongoDB error:', err);
     }
 };
 
