@@ -25,10 +25,10 @@ const TaskSchema = new Schema({
     description: { type: String, required: true },
     timeTracked: { type: Number },
     timeAllotted: { type: Number },
-    project: { type: Number, ref: 'Project' },
-    status: { type: Number, ref: 'Status' },
-    type: { type: Number, ref: 'Type' },
-    user: { type: Number, ref: 'User' }
+    projectId: { type: Number, ref: 'Project' },
+    statusId: { type: Number, ref: 'Status' },
+    typeId: { type: Number, ref: 'Type' },
+    userId: { type: Number, ref: 'User' }
 }, options);
 
 TaskSchema.virtual('id').get(function () {
@@ -38,8 +38,8 @@ TaskSchema.virtual('id').get(function () {
 const CommentSchema = new Schema({
     _id: Number,
     message: { type: String, required: true },
-    task: { type: Number, ref: 'Task' },
-    user: { type: Number, ref: 'User' }
+    taskId: { type: Number, ref: 'Task' },
+    userId: { type: Number, ref: 'User' }
 }, options);
 
 CommentSchema.virtual('id').get(function () {
@@ -50,8 +50,8 @@ const FileSchema = new Schema({
     _id: Number,
     name: { type: String, required: true },
     path: { type: String, required: true },
-    task: { type: Number, ref: 'Task' },
-    comment: { type: Number, ref: 'Comment' }
+    taskId: { type: Number, ref: 'Task' },
+    commentId: { type: Number, ref: 'Comment' }
 }, options);
 
 FileSchema.virtual('id').get(function () {
