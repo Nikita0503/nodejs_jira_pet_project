@@ -49,9 +49,10 @@ class StatusController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {statusId} = req.params;
-            const isDone = await StatusService.deleteService(statusId);
+            const isDone = await StatusService.deleteStatus(statusId);
             return res.json({deleted: isDone})
         } catch (e) {
+            console.log({e})
             next(e);
         }
     }
