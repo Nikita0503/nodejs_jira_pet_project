@@ -1,7 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const mongoose = require('mongoose'); // Подключаем mongoose для работы с MongoDB
+const mongoose = require('mongoose');
 const cors = require('cors');
 const router = require('./routes/index');
 const fileUpload = require('express-fileupload');

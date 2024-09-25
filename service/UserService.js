@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User } = require("../models/models"); // Импортируйте вашу модель User
+const { User } = require("../models/models");
 const ApiError = require("../errors/ApiError");
 const FileService = require('./FileService');
 
