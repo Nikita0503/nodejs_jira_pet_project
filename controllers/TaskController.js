@@ -27,6 +27,7 @@ class TaskController {
             const task = await TaskService.createTask(projectId, title, description, timeAllotted, statusId, typeId, userId, files);
             return res.json({task})
         } catch (e) {
+            console.log({e})
             next(e);
         }
     }
