@@ -93,8 +93,8 @@ UserSchema.virtual('id').get(function () {
 
 const ProjectUserSchema = new Schema({
     _id: Number,
-    project: { type: Number, ref: 'Project' },
-    user: { type: Number, ref: 'User' }
+    projectId: { type: Number, ref: 'Project' },
+    userId: { type: Number, ref: 'User' }
 }, options);
 
 ProjectUserSchema.virtual('id').get(function () {
