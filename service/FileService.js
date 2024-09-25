@@ -15,7 +15,8 @@ class FileService {
         const fileName = uuid.v4() + '.jpg';
         const filePath = path.resolve('static', fileName);
         await file.mv(filePath);
-        return { fileName, filePath };
+        const fullFileName = `${process.env.DOMAIN}/${fileName}`
+        return { fileName: fullFileName, filePath };
     }
 
     async detachFile(fileId) {
