@@ -11,7 +11,6 @@ class ProjectController {
             return res.json({projects})
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 
@@ -46,7 +45,6 @@ class ProjectController {
             return res.json({project})
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 
@@ -62,7 +60,6 @@ class ProjectController {
             return res.json({project});
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 

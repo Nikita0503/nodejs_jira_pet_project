@@ -52,7 +52,6 @@ class StatusController {
             const isDone = await StatusService.deleteStatus(statusId);
             return res.json({deleted: isDone})
         } catch (e) {
-            console.log({e})
             next(e);
         }
     }
