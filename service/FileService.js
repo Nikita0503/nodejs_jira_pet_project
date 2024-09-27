@@ -18,7 +18,7 @@ class FileService {
         const base64Image = file.data.toString('base64');
         const formData = new URLSearchParams();
         formData.append('image', base64Image);
-        const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+        const response = await axios.post(process.env.IMGBB_API_URL, formData, {
             params: {
                 key: process.env.IMGBB_API_KEY, 
             },
