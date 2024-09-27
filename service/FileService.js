@@ -14,7 +14,7 @@ class FileService {
 
     async saveFile(file) {
         const fileName = uuid.v4() + '.jpg';
-        const filePath = path.resolve('static', fileName);
+        // const filePath = path.resolve('static', fileName);
         const base64Image = file.data.toString('base64');
         const formData = new URLSearchParams();
         formData.append('image', base64Image);
