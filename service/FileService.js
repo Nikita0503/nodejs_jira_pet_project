@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const path = require('path');
 const fs = require('fs');
 const ApiError = require("../errors/ApiError");
+const axios = require('axios');
 
 class FileService {
     async attachFile(file, ids) {
@@ -14,10 +15,22 @@ class FileService {
     async saveFile(file) {
         const fileName = uuid.v4() + '.jpg';
         const filePath = path.resolve('static', fileName);
-        await file.mv(filePath);
-        const fullFileName = `${process.env.DOMAIN}/${fileName}`
-        return { fileName: fullFileName, filePath };
+        const base64Image = file.data.toString('base64');
+        const formData = new URLSearchParams();
+        formData.append('image', base64Image);
+        const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+            params: {
+                key: process.env.IMGBB_API_KEY, 
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+        const image = response.data;
+        return { fileName: image.data.url, filePath: 'pathDoesNotExists' };
     }
+
+   
 
     async detachFile(fileId) {
         const file = await File.findById(fileId);
