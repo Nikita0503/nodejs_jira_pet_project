@@ -17,7 +17,7 @@ async function validateUser(projectId, taskId, token) {
     if (!task) {
         throw ApiError.badRequest(`Task with id '${taskId}' not found`);
     }
-    if (task.project.toString() !== projectId) {
+    if (task.projectId.toString() !== projectId) {
         throw ApiError.badRequest(`Project with id '${projectId}' does not have a task with id '${taskId}'`);
     }
 }
