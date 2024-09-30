@@ -43,8 +43,9 @@ class FileService {
     }
 
     async deleteFile(fileName) {
-        const filePath = path.resolve('static', fileName);
-        fs.unlinkSync(filePath);    
+        //const filePath = path.resolve('static', fileName);
+        //fs.unlinkSync(filePath); 
+        return true;   
     }
 }
 
