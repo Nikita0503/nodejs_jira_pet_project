@@ -39,10 +39,10 @@ async function formComment(id) {
 async function saveFilesOfNewComment(files, commentId) {
     if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
-            await FileService.attachFile(files[i], { comment: commentId });
+            await FileService.attachFile(files[i], { commentId });
         }
     } else {
-        await FileService.attachFile(files, { comment: commentId });
+        await FileService.attachFile(files, { commentId });
     }
 }
 
@@ -50,8 +50,6 @@ class CommentService {
     async getComments(projectId, taskId, token) {
         await validateUser(projectId, taskId, token);
         const comments = await Comment.find({ taskId: taskId });
-        console.log({comments})
-
         const formedComments = [];
         for (let i = 0; i < comments.length; i++) {
             const formedComment = await formComment(comments[i]._id);
