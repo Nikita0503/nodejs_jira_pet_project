@@ -23,12 +23,12 @@ async function validateUser(projectId, taskId, token) {
 }
 
 async function formComment(id) {
-    const comment = await Comment.findById(id).select('-updatedAt -taskId -userId');
+    const comment = await Comment.findById(id).select('-updatedAt');
     if (!comment) {
         throw ApiError.badRequest(`Comment with id '${id}' not found`);
     }
-    const files = await File.find({ comment: comment._id }).select('-createdAt -updatedAt -path -commentId -taskId');
-    const user = await User.findById(comment.user).select('-createdAt -updatedAt -password');
+    const files = await File.find({ commentId: comment._id }).select('-createdAt -updatedAt -path -commentId -taskId');
+    const user = await User.findById(comment.userId).select('-createdAt -updatedAt -password');
     return {
         ...comment.toObject(),
         user,
@@ -49,7 +49,9 @@ async function saveFilesOfNewComment(files, commentId) {
 class CommentService {
     async getComments(projectId, taskId, token) {
         await validateUser(projectId, taskId, token);
-        const comments = await Comment.find({ task: taskId });
+        const comments = await Comment.find({ taskId: taskId });
+        console.log({comments})
+
         const formedComments = [];
         for (let i = 0; i < comments.length; i++) {
             const formedComment = await formComment(comments[i]._id);
@@ -61,7 +63,7 @@ class CommentService {
     async createComment(projectId, taskId, token, message, files) {
         await validateUser(projectId, taskId, token);
         const user = jwt.decode(token);
-        const comment = await Comment.create({ message, task: taskId, user: user.id });
+        const comment = await Comment.create({ message, taskId: taskId, userId: user.id });
         if (files) {
             await saveFilesOfNewComment(files, comment._id);
         }
