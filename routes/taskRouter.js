@@ -1,13 +1,13 @@
 const {Router} = require('express');
-const commentRouter = require('../comment/commentRouter');
+const commentRouter = require('./commentRouter');
 
 const {getTasksValidators,
     createTaskValidators, 
     editTaskValidators,
-    deleteTaskValidators} = require('../../middlewares/validators/taskRouterValidators');
-const authMiddleware = require('../../middlewares/authMiddleware');
-const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
-const TaskController = require('../../controllers/TaskController');
+    deleteTaskValidators} = require('../middlewares/validators/taskRouterValidators');
+const authMiddleware = require('../middlewares/authMiddleware');
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
+const TaskController = require('../controllers/TaskController');
 
 const router = new Router({mergeParams: true});
 

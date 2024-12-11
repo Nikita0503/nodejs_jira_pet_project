@@ -1,5 +1,5 @@
 const Router = require('express');
-const taskRouter = require('../task/taskRouter');
+const taskRouter = require('./taskRouter');
 
 const {existsProjectValidators,
     createProjectValidators, 
@@ -7,10 +7,10 @@ const {existsProjectValidators,
     deleteProjectValidators,
     addUserToProjectValidators,
     getProjectMembersValidators, 
-    deleteUserFromProjectValidators} = require('../../middlewares/validators/projectRouterValidators');
-const authMiddleware = require('../../middlewares/authMiddleware');
-const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
-const ProjectController = require('../../controllers/ProjectController');
+    deleteUserFromProjectValidators} = require('../middlewares/validators/projectRouterValidators');
+const authMiddleware = require('../middlewares/authMiddleware');
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
+const ProjectController = require('../controllers/ProjectController');
 
 const router = new Router();
 

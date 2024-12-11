@@ -1,10 +1,10 @@
 const Router = require('express');
 const router = new Router();
-const userRouter = require('./user/userRouter');
-const projectRouter = require('./project/projectRouter');
-const statusRouter = require('./status/statusRouter');
-const typeRouter = require('./type/typeRouter');
-const fileRouter = require('./file/fileRouter');
+const userRouter = require('./userRouter');
+const projectRouter = require('./projectRouter');
+const statusRouter = require('./statusRouter');
+const typeRouter = require('./typeRouter');
+const fileRouter = require('./fileRouter');
 
 router.use('/users', userRouter);
 router.use('/projects', projectRouter);

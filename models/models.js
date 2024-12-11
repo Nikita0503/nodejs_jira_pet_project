@@ -11,7 +11,6 @@ const Task = sequelize.define('task', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, allowNull: false},
-    timeTracked: {type: DataTypes.BIGINT},
     timeAllotted: {type: DataTypes.BIGINT},
 });
 
@@ -23,13 +22,11 @@ const Comment = sequelize.define('comment', {
 const Status = sequelize.define('status', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING, unique: true, allowNull: false},
-    color: {type: DataTypes.STRING, allowNull: false}
 });
 
 const Type = sequelize.define('type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING, unique: true, allowNull: false},
-    color: {type: DataTypes.STRING, allowNull: false}
 });
 
 const User = sequelize.define('user', {

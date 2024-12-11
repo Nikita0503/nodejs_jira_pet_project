@@ -1,10 +1,10 @@
 const Router = require('express');
 const {loginValidators, 
     registrationValidators,
-    editUserValidators} = require('../../middlewares/validators/userRouterValidators');
-const authMiddleware = require('../../middlewares/authMiddleware');
-const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
-const UserController = require('../../controllers/userController');
+    editUserValidators} = require('../middlewares/validators/userRouterValidators');
+const authMiddleware = require('../middlewares/authMiddleware');
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
+const UserController = require('../controllers/UserController');
 
 const router = new Router();
 router.get('/',

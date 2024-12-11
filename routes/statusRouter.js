@@ -1,10 +1,10 @@
 const {Router} = require('express');
 const {createStatusValidators,
     deleteStatusValidators,
-    editStatusValidators} = require('../../middlewares/validators/statusRouterValidators');
-const authMiddleware = require('../../middlewares/authMiddleware');
-const checkRoleMiddleware = require('../../middlewares/checkRoleMiddleware');
-const StatusController = require('../../controllers/StatusController');
+    editStatusValidators} = require('../middlewares/validators/statusRouterValidators');
+const authMiddleware = require('../middlewares/authMiddleware');
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
+const StatusController = require('../controllers/StatusController');
 
 const router = new Router();
 
