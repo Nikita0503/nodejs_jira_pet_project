@@ -59,6 +59,16 @@ async function formFullProject(id){
 }
 
 class ProjectService {
+
+    async getFullProject(projectId){
+        const projectExists = await Project.findOne({where: {id: projectId}});
+        if(!projectExists) {
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const project = await formFullProject(projectId);
+        return project;
+    }
+
     async getAllProjects(token){
         const user = jwt.decode(token);
         let projects;
@@ -95,17 +105,6 @@ class ProjectService {
         return formedProject;
     }
 
-    async getFullProject(projectId){
-        const projectExists = await Project.findOne({where: {id: projectId}});
-        let project = {};
-        if(!!projectExists) {
-            project = await formFullProject(projectId);
-        }else{
-            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
-        }
-        return project;
-    }
-
     async editProject(projectId, title, description){
         let project = await Project.findOne({where: {id: projectId}});
         if(!project){
@@ -139,7 +138,7 @@ class ProjectService {
         const user = jwt.decode(token);
         const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
         if(!userInProject && user.role != 'ADMIN'){
-            throw ApiError.forbidden('you do not have permissions to this resource')
+            throw ApiError.forbidden('You do not have permissions to this resource')
         }
         const users = await ProjectUser.findAll({where: {projectId}});
         const ids = users.map(user => user.userId)
@@ -165,6 +164,14 @@ class ProjectService {
     }
 
     async deleteUserFromProject(projectId, userId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${id}' not found`);
+        }
+        const user = await User.findOne({where: {id: userId}});
+        if(!user){
+            throw ApiError.badRequest(`User with id ${userId} not found`);
+        }
         const userInProject = await ProjectUser.findAll({where: {projectId, userId}});
         if(userInProject.length == 0){
             throw ApiError.badRequest(`User with id '${userId}' not found into project`);
