@@ -14,7 +14,7 @@ const registrationValidators = () => {
         check('password').isLength({min: 6, max:32}).withMessage('Not suitable length'),
         check('password').not().isNumeric().withMessage('Password should contain letters'),
         check('name').notEmpty().withMessage('Name is required'),
-        check('role').isIn(['USER', 'ADMIN', null]).withMessage('role does not exist'),
+        check('role').isIn(['USER', 'ADMIN', null]).withMessage('Role does not exist'),
         check('avatar').custom((value, { req }) => {
             const avatar = req.files?.avatar?.name;
             if(!avatar){
