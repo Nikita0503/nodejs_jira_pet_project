@@ -23,7 +23,7 @@ router.get('/',
 router.post('/exists',
     authMiddleware,
     ...existsProjectValidators(),
-    ProjectController.existsProject)
+    ProjectController.existsProject);
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),
