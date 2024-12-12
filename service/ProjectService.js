@@ -29,18 +29,24 @@ async function formFullProject(id){
 
     let tasks = [];
     for(let task of tasksInProject){
-        
-        const tasks_status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
-        const tasks_files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
-        const tasks_type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
-        const tasks_user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
+        const taskStatus = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
+        const taskFiles = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
+        const taskType = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
+        const taskUser = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
+
+        delete task.dataValues.statusId;
+        delete task.dataValues.typeId;
+        delete task.dataValues.userId;
+        delete task.dataValues.projectId;
+        delete task.dataValues.createdAt;
+        delete task.dataValues.updatedAt;
 
         tasks.push({
             ...task.dataValues,
-            status: tasks_status,
-            type: tasks_type,
-            user: tasks_user,
-            files: tasks_files
+            status: taskStatus,
+            type: taskType,
+            user: taskUser,
+            files: taskFiles
         })
     }
 
