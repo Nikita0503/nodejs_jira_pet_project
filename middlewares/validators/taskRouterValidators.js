@@ -21,7 +21,6 @@ const createTaskValidators = () => {
         check('typeId').isNumeric().withMessage('Type id is required'),
         check('statusId').isNumeric().withMessage('Status id is required'),
         check('userId').isNumeric().withMessage('User id is required'),
-        check('timeTracked').optional().isNumeric().withMessage('Must be a number'),
         check('timeAllotted').optional().isNumeric().withMessage('Must be a number')
     ];  
 };
@@ -33,7 +32,6 @@ const editTaskValidators = () => {
         check('typeId').optional().isNumeric().withMessage('Type id is required'),
         check('statusId').optional().isNumeric().withMessage('Status id is required'),
         check('userId').optional().isNumeric().withMessage('User id is required'),
-        check('timeTracked').optional().isNumeric().withMessage('Must be a number'),
         check('timeAllotted').optional().isNumeric().withMessage('Must be a number')
     ];  
 };

@@ -92,7 +92,7 @@ class TaskService {
         return formedTask;
     }
 
-    async editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId, files){
+    async editTask(projectId, taskId, title, description, timeAllotted, statusId, typeId, userId, files){
         const project = await Project.findOne({where: {id: projectId}});
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);

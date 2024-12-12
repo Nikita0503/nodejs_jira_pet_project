@@ -56,9 +56,9 @@ class TaskController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {projectId, taskId} = req.params;
-            const {title, description, timeAllotted, timeTracked, statusId, typeId, userId} = req.body;
+            const {title, description, timeAllotted, statusId, typeId, userId} = req.body;
             const files = req.files?.file;
-            const task = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, timeTracked, statusId, typeId, userId, files);
+            const task = await TaskService.editTask(projectId, taskId, title, description, timeAllotted, statusId, typeId, userId, files);
             return res.json({task})
         } catch (e) {
             next(e);
