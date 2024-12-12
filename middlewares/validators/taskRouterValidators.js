@@ -6,6 +6,13 @@ const getTasksValidators = () => {
     ];  
 };
 
+const getTaskValidators = () => {
+    return [
+        check('projectId').isNumeric().withMessage('Must be a number'),
+        check('taskId').isNumeric().withMessage('Must be a number')
+    ];  
+};
+
 const createTaskValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),
@@ -40,6 +47,7 @@ const deleteTaskValidators = () => {
 
 module.exports = {
     getTasksValidators,
+    getTaskValidators,
     createTaskValidators,
     editTaskValidators,
     deleteTaskValidators

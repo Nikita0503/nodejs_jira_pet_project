@@ -2,6 +2,7 @@ const {Router} = require('express');
 const commentRouter = require('./commentRouter');
 
 const {getTasksValidators,
+    getTaskValidators,
     createTaskValidators, 
     editTaskValidators,
     deleteTaskValidators} = require('../middlewares/validators/taskRouterValidators');
@@ -17,6 +18,11 @@ router.get('/',
     authMiddleware,
     ...getTasksValidators(),
     TaskController.getTasks);
+
+router.get('/:taskId',
+    authMiddleware,
+    ...getTaskValidators(),
+    TaskController.getFullTask);
 
 router.post('/',
     checkRoleMiddleware('ADMIN'),

@@ -6,10 +6,28 @@ class TaskController {
 
     async getTasks(req, res, next){
         try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
             const {projectId} = req.params;
             const token = req.headers.authorization.split(' ')[1];
             const tasks = await TaskService.getTasks(projectId, token);
             return res.json({tasks})
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getFullTask(req, res, next){
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {projectId, taskId} = req.params;
+            const task = await TaskService.getFullTask(projectId, taskId);
+            return res.json({task})
         } catch (e) {
             next(e);
         }

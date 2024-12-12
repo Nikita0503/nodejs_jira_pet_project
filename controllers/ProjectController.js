@@ -11,18 +11,35 @@ class ProjectController {
             return res.json({projects})
         } catch (e) {
             next(e);
-            console.log(e)
+        }
+    }
+
+    async getFullProject(req, res, next){
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const { projectId } = req.params;
+            const project = await ProjectService.getFullProject(projectId);
+            return res.json({project})
+        } catch (e) {
+            next(e);
         }
     }
 
     async existsProject(req, res, next){
-        const errors = validationResult(req);
-        if(!errors.isEmpty()){
-            return next(ApiError.badRequest("Invalid data", errors))
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
+            const {title} = req.body;
+            const project = await ProjectService.existsProject(title);
+            return res.json({exist: !!project})
+        } catch (e) {
+            next(e);
         }
-        const {title} = req.body;
-        const project = await ProjectService.existsProject(title);
-        return res.json({exist: !!project})
     }
 
     async createProject(req, res, next){
@@ -39,17 +56,6 @@ class ProjectController {
         }
     }
 
-    async getFullProject(req, res, next){
-        try{
-            const { projectId } = req.params;
-            const project = await ProjectService.getFullProject(projectId);
-            return res.json({project})
-        } catch (e) {
-            next(e);
-            console.log(e)
-        }
-    }
-
     async editProject(req, res, next){
         try{
             const errors = validationResult(req);
@@ -62,12 +68,15 @@ class ProjectController {
             return res.json({project});
         } catch (e) {
             next(e);
-            console.log(e)
         }
     }
 
     async deleteProject(req, res, next){
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.badRequest("Invalid data", errors))
+            }
             const {projectId} = req.params;
             const isDone = await ProjectService.deleteProject(projectId);
             return res.json({deleted: isDone});

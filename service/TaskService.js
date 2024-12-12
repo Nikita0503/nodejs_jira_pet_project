@@ -49,6 +49,23 @@ class TaskService {
         return formedTasks;
     }
 
+    async getFullTask(projectId, taskId){
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const task = await Task.findOne({where: {id: taskId}});
+        if(!task){
+            throw ApiError.badRequest(`Task with id '${taskId}' not found`);
+        }
+        const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
+        if(!taskInProject){
+            throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
+        }
+        const formedTask = await formTask(taskInProject.id);
+        return formedTask;
+    }
+
     async createTask(projectId, title, description, timeAllotted, statusId, typeId, userId, files){
         const project = await Project.findOne({where: {id: projectId}});
         if(!project){
@@ -83,6 +100,10 @@ class TaskService {
         const task = await Task.findOne({where: {id: taskId}});
         if(!task){
             throw ApiError.badRequest(`Task with id '${taskId}' not found`);
+        }
+        const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
+        if(!taskInProject){
+            throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
         }
         if(userId){
             const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
@@ -119,6 +140,10 @@ class TaskService {
         const task = await Task.findOne({where: {id: taskId}});
         if(!task){
             throw ApiError.badRequest(`Task with id '${taskId}' not found`);
+        }
+        const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
+        if(!taskInProject){
+            throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
         }
         const deletedTaskId = await Task.destroy({where: {id: taskId}});
         return !!deletedTaskId;
