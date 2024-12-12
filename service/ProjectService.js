@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 
 async function formProject(id){
-    const project = await Project.findOne({attributes: {exclude: ['createdAt']}, where: {id}});
+    const project = await Project.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
     let formedProject = {...project.dataValues};
     const tasksCount = await Task.count({where: {projectId: id}});
     const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
@@ -18,35 +18,32 @@ async function formProject(id){
 }
 
 async function formFullProject(id){
-    const project = await Project.findOne({attributes: {exclude: ['createdAt']}, where: {id}});
+    const project = await Project.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id}});
     let formedProject = {...project.dataValues};
     const tasksCount = await Task.count({where: {projectId: id}});
     const usersInProject = await ProjectUser.findAll({where: {projectId: id}}); 
     const userIds = usersInProject.map(user => user.dataValues.userId);
     const users = await User.findAll({attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: {id: [...userIds]}});
 
-    const tasksInProject = await Task.findAll({where: {projectId: id}});
+    const tasksInProject = await Task.findAll({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {projectId: id}});
 
     let tasks = [];
     for(let task of tasksInProject){
-        const taskStatus = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
-        const taskFiles = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
-        const taskType = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
-        const taskUser = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
-
-        delete task.dataValues.statusId;
-        delete task.dataValues.typeId;
-        delete task.dataValues.userId;
-        delete task.dataValues.projectId;
-        delete task.dataValues.createdAt;
-        delete task.dataValues.updatedAt;
-
+        const status = await Status.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.statusId}});
+        const files = await File.findAll({attributes: {exclude: ['createdAt', 'updatedAt', 'path', 'commentId', 'taskId']}, where: {taskId: task.id}});
+        const type = await Type.findOne({attributes: {exclude: ['createdAt', 'updatedAt']}, where: {id: task.typeId}});
+        const user = await User.findOne({attributes: {exclude: ['createdAt', 'updatedAt', 'password']}, where: {id: task.userId}})
+        let formedTask = {...task.dataValues} 
+        delete formedTask.statusId;
+        delete formedTask.typeId;
+        delete formedTask.userId;
+        delete formedTask.projectId;
         tasks.push({
-            ...task.dataValues,
-            status: taskStatus,
-            type: taskType,
-            user: taskUser,
-            files: taskFiles
+            ...formedTask,
+            status,
+            type,
+            user,
+            files,
         })
     }
 
