@@ -56,7 +56,7 @@ class TaskService {
         }
         const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
         const userIdsInProject = usersInProject.map(user => user.dataValues.userId);
-        if( !userIdsInProject.includes(Number.parseInt(userId)) ){
+        if(!userIdsInProject.includes(Number.parseInt(userId))){
             throw ApiError.badRequest(`User with id ${userId} not found in project`)
         }
         const status = await Status.findOne({where: {id: statusId}});
@@ -67,7 +67,7 @@ class TaskService {
         if(!type){
             throw ApiError.badRequest(`Type with id '${typeId}' not found`);
         }
-        const task = await Task.create({title, description, timeTracked: null, timeAllotted, projectId, statusId, typeId, userId});
+        const task = await Task.create({title, description, timeAllotted, projectId, statusId, typeId, userId});
         if(files){
             await saveFilesOfNewTask(files, task.id);
         }
@@ -85,9 +85,10 @@ class TaskService {
             throw ApiError.badRequest(`Task with id '${taskId}' not found`);
         }
         if(userId){
-            const user = await User.findOne({where: {id: userId}});
-            if(!user){
-                throw ApiError.badRequest(`User with id ${userId} not found`)
+            const usersInProject = await ProjectUser.findAll({where: {projectId}}); 
+            const userIdsInProject = usersInProject.map(user => user.dataValues.userId);
+            if(!userIdsInProject.includes(Number.parseInt(userId))){
+                throw ApiError.badRequest(`User with id ${userId} not found in project`)
             }
         }
         if(statusId){
@@ -102,7 +103,7 @@ class TaskService {
                 throw ApiError.badRequest(`Type with id '${typeId}' not found`);
             }
         }
-        await Task.update({title, description, timeAllotted, timeTracked, statusId, typeId, userId}, {where: {id: taskId}});
+        await Task.update({title, description, timeAllotted, statusId, typeId, userId}, {where: {id: taskId}});
         if(files){
             await saveFilesOfNewTask(files, task.id);
         }
