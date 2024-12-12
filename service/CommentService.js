@@ -9,17 +9,18 @@ async function validateUser(projectId, taskId, token){
     if(!project){
         throw ApiError.badRequest(`Project with id '${projectId}' not found`);
     }
-    const user = jwt.decode(token);
-    const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
-    if(!userInProject && user.role != 'ADMIN'){
-        throw ApiError.forbidden('you do not have permissions to this resource')
-    }
     const task = await Task.findOne({where: {id: taskId}});
     if(!task){
         throw ApiError.badRequest(`Task with id '${taskId}' not found`);
     }
-    if(task.projectId != projectId){
-        throw ApiError.badRequest(`Project with id '${projectId}' do not has task with id '${taskId}'`);
+    const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
+    if(!taskInProject){
+        throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
+    }
+    const user = jwt.decode(token);
+    const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
+    if(!userInProject && user.role != 'ADMIN'){
+        throw ApiError.forbidden('You do not have permissions to this resource')
     }
 }
 
@@ -76,6 +77,14 @@ class CommentService {
         if(!comment){
             throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
         }
+        const commentInTask = await Comment.findOne({where: {id: commentId, taskId: taskId}});
+        if(!commentInTask){
+            throw ApiError.badRequest(`Comment with id '${commentId}' in task with id '${taskId}' not found`);
+        }
+        const user = jwt.decode(token);
+        if(comment.dataValues.userId != user.id){
+            throw ApiError.badRequest(`You can't edit comment with id '${commentId}', it is not your`);
+        }
         await Comment.update({message}, {where: {id: commentId}});
         if(files){
             await saveFilesOfNewComment(files, comment.id);
@@ -89,6 +98,14 @@ class CommentService {
         const comment = await Comment.findOne({where: {id: commentId}});
         if(!comment){
             throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
+        }
+        const commentInTask = await Comment.findOne({where: {id: commentId, taskId: taskId}});
+        if(!commentInTask){
+            throw ApiError.badRequest(`Comment with id '${commentId}' in task with id '${taskId}' not found`);
+        }
+        const user = jwt.decode(token);
+        if(comment.dataValues.userId != user.id && user.role != 'ADMIN'){
+            throw ApiError.badRequest(`You can't delete comment with id '${commentId}', it is not your`);
         }
         const deletedCommentId = await Comment.destroy({where: {id: commentId}});
         return !!deletedCommentId;
