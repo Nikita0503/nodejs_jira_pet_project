@@ -19,8 +19,8 @@ class StatusController {
             if(!errors.isEmpty()){
                 return next(ApiError.badRequest("Invalid data", errors))
             }
-            const {title, color} = req.body;
-            const types = await TypeService.createType(title, color);
+            const {title} = req.body;
+            const types = await TypeService.createType(title);
             return res.json({types})
         } catch (e) {
             next(e);
@@ -34,8 +34,8 @@ class StatusController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {typeId} = req.params;
-            const {title, color} = req.body;
-            const type = await TypeService.editType(typeId, title, color);
+            const {title} = req.body;
+            const type = await TypeService.editType(typeId, title);
             return res.json({type})
         } catch (e) {
             next(e);

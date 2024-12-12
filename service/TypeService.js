@@ -13,17 +13,17 @@ class TypeService {
         return types;
     }
 
-    async createType(title, color){
+    async createType(title){
         const candidate = await Type.findOne({where: {title: title.toString()}});
         if(candidate){
             throw ApiError.internal(`Type with title '${title}' already exist`);
         }
-        const type = await Type.create({title, color});
+        const type = await Type.create({title});
         const formedType = await formType(type.id);
         return formedType;
     }
 
-    async editType(typeId, title, color){
+    async editType(typeId, title){
         let type = await Type.findOne({where: {id: typeId}});
         if(!type){
             throw ApiError.internal(`Type with id '${typeId}' not found`);
@@ -34,7 +34,7 @@ class TypeService {
                 throw ApiError.internal(`Type with title '${title}' already exist`);
             }
         }
-        await Type.update({title, color}, {where: {id: typeId}});
+        await Type.update({title}, {where: {id: typeId}});
         const formedType = await formType(typeId);
         return formedType;
     }

@@ -13,17 +13,17 @@ class StatusService {
         return statuses;
     }
 
-    async createStatus(title, color){
+    async createStatus(title){
         const candidate = await Status.findOne({where: {title: title.toString()}});
         if(candidate){
             throw ApiError.internal(`Status with title '${title}' already exist`);
         }
-        const status = await Status.create({title, color});
+        const status = await Status.create({title});
         const formedStatus = await formStatus(status.id);
         return formedStatus;
     }
 
-    async editStatus(statusId, title, color){
+    async editStatus(statusId, title){
         let status = await Status.findOne({where: {id: statusId}});
         if(!status){
             throw ApiError.internal(`Status with id '${statusId}' not found`);
@@ -34,7 +34,7 @@ class StatusService {
                 throw ApiError.internal(`Status with title '${title}' already exist`);
             }
         }
-        await Status.update({title, color}, {where: {id: statusId}});
+        await Status.update({title}, {where: {id: statusId}});
         const formedStatus = await formStatus(statusId);
         return formedStatus;
     }
