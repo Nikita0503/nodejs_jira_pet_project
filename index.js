@@ -3,7 +3,7 @@ const { initApp, initSequelize } = require('./utils/init');
 
 const PORT = process.env.PORT || 5000;
 
-const app = initApp();
+const app = initApp(__dirname);
 
 const start = async () => {
     try {

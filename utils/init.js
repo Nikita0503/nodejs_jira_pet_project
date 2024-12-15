@@ -9,11 +9,11 @@ const sequelize = require('../db');
 const MAX_RETRIES = 5;
 const DELAY = 1000;
 
-const initApp = () => {
+const initApp = (dirname) => {
     const app = express();
     app.use(cors());
     app.use(express.json());
-    app.use(express.static(path.resolve(__dirname, 'static')));
+    app.use(express.static(path.resolve(dirname, 'static')));
     app.use(fileUpload({}));
     app.use('/api', router);
     app.use(errorHandler);
