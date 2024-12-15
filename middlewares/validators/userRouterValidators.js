@@ -24,7 +24,8 @@ const registrationValidators = () => {
             if(extension === '.jpg'
                 || extension === '.jpeg'
                 || extension === '.png'
-                || extension === '.gif'){
+                || extension === '.gif'
+                || extension === '.webp'){
                 return true;
             }else{
                 return false;
@@ -44,7 +45,8 @@ const editUserValidators = () => {
             if(extension === '.jpg'
                 || extension === '.jpeg'
                 || extension === '.png'
-                || extension === '.gif'){
+                || extension === '.gif'
+                || extension === '.webp'){
                 return true;
             }else{
                 return false;
