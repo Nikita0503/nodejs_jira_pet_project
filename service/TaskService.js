@@ -49,7 +49,7 @@ class TaskService {
         return formedTasks;
     }
 
-    async getFullTask(projectId, taskId){
+    async getFullTask(projectId, taskId, token){
         const project = await Project.findOne({where: {id: projectId}});
         if(!project){
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
@@ -61,6 +61,11 @@ class TaskService {
         const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
         if(!taskInProject){
             throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
+        }
+        const user = jwt.decode(token);
+        const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
+        if(!userInProject && user.role != 'ADMIN'){
+            throw ApiError.forbidden('You do not have permissions to this resource')
         }
         const formedTask = await formTask(taskInProject.id);
         return formedTask;

@@ -16,7 +16,7 @@ class FileService {
         const fileName = uuid.v4() + '.jpg';
         const filePath = path.resolve('static', fileName);
         await file.mv(filePath);
-        return {fileName: `http://localhost:5000/${fileName}`};
+        return {fileName};
     }
 
     async detachFile(fileId){

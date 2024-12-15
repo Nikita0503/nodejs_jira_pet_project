@@ -26,7 +26,8 @@ class TaskController {
                 return next(ApiError.badRequest("Invalid data", errors))
             }
             const {projectId, taskId} = req.params;
-            const task = await TaskService.getFullTask(projectId, taskId);
+            const token = req.headers.authorization.split(' ')[1];
+            const task = await TaskService.getFullTask(projectId, taskId, token);
             return res.json({task})
         } catch (e) {
             next(e);
