@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User, Task, Project } = require("../models/models");
 const ApiError = require("../errors/ApiError");

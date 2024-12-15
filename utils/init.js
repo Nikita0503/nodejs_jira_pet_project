@@ -6,6 +6,9 @@ const router = require('../routes/index');
 const errorHandler = require('../middlewares/errorHandlingMiddleware');
 const sequelize = require('../db');
 
+const MAX_RETRIES = 5;
+const DELAY = 1000;
+
 const initApp = () => {
     const app = express();
     app.use(cors());
@@ -17,8 +20,24 @@ const initApp = () => {
     return app;
 }
 
+const checkDatabaseConnection = async () => {
+    let retries = 0;
+    while (retries < MAX_RETRIES) {
+        try {
+            await sequelize.authenticate();
+            console.log('Database connection established.');
+            return;
+        } catch (error) {
+            retries++;
+            console.log(`Database connection failed. Retrying... (${retries}/${MAX_RETRIES})`);
+            await new Promise(resolve => setTimeout(resolve, DELAY));
+        }
+    }
+    throw new Error('Unable to connect to the database after several attempts.');
+};
+
 const initSequelize = async () => {
-    await sequelize.authenticate();
+    await checkDatabaseConnection();
     await sequelize.sync();
 }
 
