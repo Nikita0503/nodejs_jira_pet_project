@@ -40,8 +40,7 @@ const User = sequelize.define('user', {
 
 const File = sequelize.define('file', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
-    path: {type: DataTypes.STRING, allowNull: false}
+    name: {type: DataTypes.STRING, allowNull: false}
 })
 
 const ProjectUser = sequelize.define('project_user', {

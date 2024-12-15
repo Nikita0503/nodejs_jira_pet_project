@@ -8,7 +8,7 @@ class FileService {
 
     async attachFile(file, ids){
         const addedFileData = await this.saveFile(file); 
-        const fileInfo = await File.create({name: addedFileData.fileName, path: addedFileData.filePath, ...ids})
+        const fileInfo = await File.create({name: addedFileData.fileName, ...ids})
         return fileInfo.name;
     }
 
@@ -16,7 +16,7 @@ class FileService {
         const fileName = uuid.v4() + '.jpg';
         const filePath = path.resolve('static', fileName);
         await file.mv(filePath);
-        return {fileName, filePath};
+        return {fileName};
     }
 
     async detachFile(fileId){
