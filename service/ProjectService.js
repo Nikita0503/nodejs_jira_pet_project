@@ -57,7 +57,14 @@ async function formFullProject(id){
 
 class ProjectService {
 
-    async getFullProject(projectId){
+    async getFullProject(projectId, token){
+        const user = jwt.decode(token);
+        if(user.role !== "ADMIN"){
+            const userInProject = await ProjectUser.findOne({where: {userId: user.id, projectId: projectId}}); 
+            if(!userInProject){
+                throw ApiError.forbidden('You do not have permissions to this resource')
+            }
+        }
         const projectExists = await Project.findOne({where: {id: projectId}});
         if(!projectExists) {
             throw ApiError.badRequest(`Project with id '${projectId}' not found`);
