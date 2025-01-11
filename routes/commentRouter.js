@@ -1,5 +1,6 @@
 const {Router} = require('express');
-const {getCommentsValidators, 
+const {getFullCommentValidators,
+    getCommentsValidators, 
     createCommentValidators,
     editCommentValidators,
     deleteCommentValidators} = require('../middlewares/validators/commentRouterValidators');
@@ -13,6 +14,10 @@ router.get('/',
     authMiddleware,
     ...getCommentsValidators(),
     CommentController.getComments);
+
+router.get('/:commentId',
+    ...getFullCommentValidators(),
+    CommentController.getFullComment);
 
 router.post('/',
     authMiddleware,

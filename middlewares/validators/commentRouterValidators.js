@@ -1,5 +1,13 @@
 const {check} = require('express-validator');
 
+const getFullCommentValidators = () => {
+    return [
+        check('projectId').isNumeric().withMessage('Must be a number'),
+        check('taskId').isNumeric().withMessage('Must be a number'),
+        check('commentId').isNumeric().withMessage('Must be a number'),
+    ];  
+};
+
 const getCommentsValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),
@@ -33,6 +41,7 @@ const deleteCommentValidators = () => {
 };
 
 module.exports = {
+    getFullCommentValidators,
     getCommentsValidators,
     createCommentValidators,
     editCommentValidators,

@@ -60,6 +60,37 @@ class CommentService {
         return formedComments;
     }
 
+    async getFullComment(projectId, taskId, commentId, token){
+        await validateUser(projectId, taskId, token);
+        const project = await Project.findOne({where: {id: projectId}});
+        if(!project){
+            throw ApiError.badRequest(`Project with id '${projectId}' not found`);
+        }
+        const task = await Task.findOne({where: {id: taskId}});
+        if(!task){
+            throw ApiError.badRequest(`Task with id '${taskId}' not found`);
+        }
+        const taskInProject = await Task.findOne({where: {id: taskId, projectId: projectId}});
+        if(!taskInProject){
+            throw ApiError.badRequest(`Task with id '${taskId}' in project with id '${projectId}' not found`);
+        }
+        const user = jwt.decode(token);
+        const userInProject = await ProjectUser.findOne({where: {projectId, userId: user.id}});
+        if(!userInProject && user.role != 'ADMIN'){
+            throw ApiError.forbidden('You do not have permissions to this resource')
+        }
+        const comment = await Comment.findOne({where: {id: commentId}});
+        if(!comment){
+            throw ApiError.badRequest(`Comment with id '${commentId}' not found`);
+        }
+        const commentInTask = await Comment.findOne({where: {id: commentId, taskId: taskId}});
+        if(!commentInTask){
+            throw ApiError.badRequest(`Comment with id '${commentId}' in task with id '${taskId}' not found`);
+        }
+        const formedComment = await formComment(comment.id);
+        return formedComment;
+    }
+
     async createComment(projectId, taskId, token, message, files){
         await validateUser(projectId, taskId, token);
         const user = jwt.decode(token);
