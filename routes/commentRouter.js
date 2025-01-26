@@ -16,6 +16,7 @@ router.get('/',
     CommentController.getComments);
 
 router.get('/:commentId',
+    authMiddleware,
     ...getFullCommentValidators(),
     CommentController.getFullComment);
 
