@@ -51,7 +51,7 @@ const editCommentValidators = () => {
         check('projectId').isNumeric().withMessage('Must be a number'),
         check('taskId').isNumeric().withMessage('Must be a number'),
         check('commentId').isNumeric().withMessage('Must be a number'),
-        check('message').notEmpty().withMessage('Must be a number'),
+        check('message').notEmpty().withMessage('Message is required'),
         check('file').custom((value, { req }) => {
             let files = req?.files?.file;
             if(!files){

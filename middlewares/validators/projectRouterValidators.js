@@ -21,6 +21,7 @@ const createProjectValidators = () => {
 const editProjectValidators = () => {
     return [
         check('projectId').isNumeric().withMessage('Must be a number'),
+        check('title').optional().notEmpty().withMessage('Title is required'),
     ]
 }
 
