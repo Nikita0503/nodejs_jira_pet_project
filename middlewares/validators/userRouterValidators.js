@@ -36,6 +36,7 @@ const registrationValidators = () => {
 
 const editUserValidators = () => {
     return [
+        check('name').optional().notEmpty().withMessage('Name is required'),
         check('avatar').custom((value, { req }) => {
             const avatar = req.files?.avatar?.name;
             if(!avatar){
