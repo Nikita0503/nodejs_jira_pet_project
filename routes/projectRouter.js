@@ -26,11 +26,6 @@ router.get('/:projectId',
     ...getFullProjectValidators(),
     ProjectController.getFullProject);
 
-router.post('/exists',
-    authMiddleware,
-    ...existsProjectValidators(),
-    ProjectController.existsProject);
-
 router.post('/',
     checkRoleMiddleware('ADMIN'),
     ...createProjectValidators(),
