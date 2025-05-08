@@ -50,3 +50,5 @@ npm run dev
 5. Find the Postman collection [`attachments/Jira Pet Project (Node.js).postman_collection`] and its corresponding Env [`attachments/Jira_pet_project_node_js.postman_environment.json`].
 6. Set up Postman to display the collection (`Jira Pet Project (Node.js)`) and use the Env (`Jira_pet_project_node_js`).
 7. Try the `Authorization/login` endpoint. You should see a `400 - Bad Request` status with the message: `"User not found"`, as the database is still empty.
+
+## Good luck and have fun! 🚀
