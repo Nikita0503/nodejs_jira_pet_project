@@ -51,4 +51,19 @@ npm run dev
 6. Set up Postman to display the collection (`Jira Pet Project (Node.js)`) and use the Env (`Jira_pet_project_node_js`).
 7. Try the `Authorization/login` endpoint. You should see a `400 - Bad Request` status with the message: `"User not found"`, as the database is still empty.
 
+## 🔗 Reference Frontend Implementation
+
+If you want to see an already implemented **React frontend** for this backend, check out the following repository:
+
+👉 [React Frontend for the Jira-like App](https://git.epam.com/nikita_shevtsiv/epam-mobile-lab-react)
+
+Read its `README.md` to find:
+
+- Recommendations and development patterns for **React**, **React Native**, **Angular**, and **Node.js / Express**
+- Suggested **testing approaches**
+- Built-in interactive tutorials available inside the app (look for the ❓ icon in the top-right corner)
+
+This frontend was designed as part of the training to help developers build scalable apps using real backend data and best practices.
+
+
 ## Good luck and have fun! 🚀
