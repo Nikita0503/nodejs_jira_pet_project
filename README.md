@@ -59,7 +59,7 @@ If you want to see an already implemented **React frontend** for this backend, c
 
 Read its `README.md` to find:
 
-- Recommendations and development patterns for **React**, **React Native**, **Angular**, and **Node.js / Express**
+- Recommendations and development patterns for **React**, **React Native**, **Angular**, and **Express (Node.js)**
 - Suggested **testing approaches**
 - Built-in interactive tutorials available inside the app (look for the ❓ icon in the top-right corner)
 
