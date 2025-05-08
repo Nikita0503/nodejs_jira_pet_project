@@ -1,0 +1,1836 @@
+{
+	"info": {
+		"_postman_id": "d7c4f1f1-9c44-4bd6-b9de-e890be2080f4",
+		"name": "Jira Pet Project (Node.js)",
+		"description": "The project is a task management system where users can create and manage projects and tasks, as well as interact with each other through comments. The main features include:\n\n1. **Project Management**: The ability to create, edit, and delete projects, as well as add and remove users from projects.\n    \n2. **Task Management**: Creating, editing, and deleting tasks within projects, including tracking time and statuses.\n    \n3. **Comments**: Users can leave comments on tasks, enhancing communication and progress tracking.\n    \n4. **Roles and Permissions**: Support for various user roles (e.g., ADMIN) to control access to system features.\n    \n\nThe project data structure includes titles, descriptions, unique identifiers, task counts, and lists of users working on the project. The system uses authentication tokens to ensure security and manage access.\n\n## **README**\n\nIt supports two roles: **ADMIN** and **USER**.\n\n## **Projects**:\n\n**ADMIN:**\n\nhas access to full management of all projects.\n\n**USER:**  \nhas access to view projects to which he has been added. The USER cannot create, edit, or delete any projects. The USER also cannot add or delete users in the project.\n\n## Tasks:\n\n**ADMIN:**\n\nhas access to full management of all tasks in all projects.\n\n**USER:**\n\nhas access to view and edit tasks of projects to which he has been added. The USER cannot create or delete any tasks.\n\n## Comments:\n\n**ADMIN:**\n\nhas access to create comment, view, delete all comments under tasks in all projects. The ADMIN cannot edit other user's comments, only his own\n\n**USER:**\n\nhas access to create comment, view all comments under tasks in projects to which he has been added. The USER cannot edit, delete other user's comments, only his own\n\n## Statuses:\n\n**ADMIN:**\n\nhas access to full management of all statuses.\n\n**USER:**\n\nhas access to view all statuses. he USER cannot create, edit, or delete any statuses.\n\n## Types:\n\n**ADMIN:**\n\nhas access to full management of all types.\n\n**USER:**\n\nhas access to view all statuses. he USER cannot create, edit, or delete any types.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6402268",
+		"_collection_link": "https://gold-satellite-682146.postman.co/workspace/REST-API-tests~4e967239-be68-4799-a979-a0aa93f0b3c0/collection/6402268-d7c4f1f1-9c44-4bd6-b9de-e890be2080f4?action=share&source=collection_link&creator=6402268"
+	},
+	"item": [
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@gmail.com\",\r\n    \"password\": \"Password12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@gmail.com\",\r\n    \"name\": \"User name\",\r\n    \"password\": \"Password12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration with avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "User name",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Password12345",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/images/android.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration for admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"name\": \"Admin name\",\r\n    \"password\": \"Password12345\",\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/registration",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### POST /users/login\n\n- **Description**: Authenticates the user and returns a JWT token.\n\n- **Authorization**: Not required.\n\n- **Request Body**:\n    - `email` (string, required): The user's email.\n    - `password` (string, required): The user's password.\n\n- **Response**:\n\n    ```json\n    { \n        \"token\": \"your_jwt_token\" \n    }\n    ```\n\n---\n\n### POST /users/registration\n\n- **Description**: Registers a new user.\n\n- **Authorization**: Not required.\n\n- **Request Body**:\n    - `email` (string, required): The user's email.\n    - `password` (string, required): The user's password.\n    - `name` (string, required): The user's name.\n    - `role` (string, optional): Defaults to \"user\".\n    - `avatar` (file, optional): An optional avatar file.\n\n- **Response**:\n\n    ```json\n    { \n        \"token\": \"your_jwt_token\" \n    }\n    ```\n"
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "get comments of tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get comment of task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"Comment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create comment with file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "Comment",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create comment with files",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "Comment",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"New Comment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/13",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit comment with file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "New Comment",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/13",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit comment with files",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "New Comment",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/13",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/comments/13",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								"comments",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /projects/:projectId/tasks/:taskId/comments\n\n- **Description**: Retrieves all comments for a specific task within a project.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    { \n        \"comments\": [ \n            { \n                \"id\": 1,\n                \"message\": \"New Comment\",\n                \"createdAt\": \"2025-01-11T14:02:29.399Z\",\n                \"user\": {\n                    \"id\": 1,\n                    \"name\": \"User\",\n                    \"email\": \"user@gmail.com\",\n                    \"role\": \"USER\",\n                    \"avatar\": null\n                },\n                \"files\": [\n                    {\n                        \"id\": 28,\n                        \"name\": \"37295b61-99a2-45a8-8e14-e3a62308a9b0.jpg\"\n                    }\n                ]\n            } \n        ] \n    }\n    ```\n\n---\n\n### GET /projects/:projectId/tasks/:taskId/comments/:commentId\n\n- **Description**: Retrieves a comment by commentId.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"comment\": {\n            \"id\": 1,\n            \"message\": \"New Comment\",\n            \"createdAt\": \"2025-01-11T14:02:29.399Z\",\n            \"user\": {\n                \"id\": 1,\n                \"name\": \"User\",\n                \"email\": \"user@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 28,\n                    \"name\": \"37295b61-99a2-45a8-8e14-e3a62308a9b0.jpg\"\n                }\n            ]\n        }\n    }\n    ```\n\n---\n\n### POST /projects/:projectId/tasks/:taskId/comments\n\n- **Description**: Creates a new comment for a specific task within a project.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Request Body**:\n\n    - `message` (string, required): The content of the comment.\n    - `file` (file, optional): Optional file attachment.\n\n- **Response**:\n\n    ```json\n    { \n        \"comment\": { \n            \"id\": 1,\n            \"message\": \"New Comment\",\n            \"createdAt\": \"2025-01-11T14:02:29.399Z\",\n            \"user\": {\n                \"id\": 1,\n                \"name\": \"User\",\n                \"email\": \"user@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 28,\n                    \"name\": \"37295b61-99a2-45a8-8e14-e3a62308a9b0.jpg\"\n                }\n            ]\n        } \n    }\n    ```\n\n---\n\n### PUT /projects/:projectId/tasks/:taskId/comments/:commentId\n\n- **Description**: Edits an existing comment by ID.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Request Body**:\n\n    - `message` (string, required): Updated content of the comment.\n    - `file` (file, optional): Optional file attachment.\n\n- **Response**:\n\n    ```json\n    { \n        \"comment\": { \n            \"id\": 1,\n            \"message\": \"Updated Comment\",\n            \"createdAt\": \"2025-01-11T14:02:29.399Z\",\n            \"user\": {\n                \"id\": 1,\n                \"name\": \"User\",\n                \"email\": \"user@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 28,\n                    \"name\": \"37295b61-99a2-45a8-8e14-e3a62308a9b0.jpg\"\n                }\n            ]\n        } \n    }\n    ```\n\n---\n\n### DELETE /projects/:projectId/tasks/:taskId/comments/:commentId\n\n- **Description**: Deletes a comment by ID.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    { \n        \"deleted\": true \n    }\n    ```\n"
+		},
+		{
+			"name": "Files",
+			"item": [
+				{
+					"name": "detach file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/files/72",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"files",
+								"72"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attach file to task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "taskId",
+									"value": "125",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/files/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"files",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attach file to comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "commentId",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/files/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"files",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### POST /files\n\n- **Description**: Attaches a file to a task or a comment.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Request Body**:\n\n    - `taskId` (string, optional): ID of the task.\n    - `commentId` (string, optional): ID of the comment.\n    - `file` (file, required): File to attach.\n\n- **Response**:\n\n    ```json\n    {\n        \"file\": \"https://...jpg\"\n    }\n    ```\n\n---\n\n### DELETE /files/:fileId\n\n- **Description**: Detaches (deletes) a file from a task or comment.\n\n- **Authorization**: Required (Bearer Token).\n\n- **URL Parameters**:\n\n    - `fileId` (string, required): ID of the file to delete.\n\n- **Response**:\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n"
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "get projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get project",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"\",\r\n    \"tasksCount\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Project title\",\r\n    \"description\": \"Project description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Project title\",\r\n    \"description\": \"New Project description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/9",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/10",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get project members",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add project member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"userId\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/12/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"12",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"userId\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/9/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"9",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /projects\n\n- **Description**: Retrieves all projects.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"projects\": [\n            {\n                \"title\": \"Project title\",\n                \"description\": \"Project description\",\n                \"id\": \"12\",\n                \"tasksCount\": 0,\n                \"users\": [\n                    {\n                        \"id\": 1,\n                        \"name\": \"User name\",\n                        \"email\": \"example@gmail.com\",\n                        \"role\": \"USER\",\n                        \"avatar\": null\n                    }\n                ]\n            }\n        ]\n    }\n    ```\n\n---\n\n### GET /projects/:projectId\n\n- **Description**: Retrieves a project by projectId.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"project\": {\n            \"title\": \"Project title\",\n            \"description\": \"Project description\",\n            \"id\": \"12\",\n            \"tasksCount\": 1,\n            \"users\": [\n                {\n                    \"id\": 1,\n                    \"name\": \"User name\",\n                    \"email\": \"example@gmail.com\",\n                    \"role\": \"USER\",\n                    \"avatar\": null\n                }\n            ],\n            \"tasks\": [\n                {\n                    \"id\": 6,\n                    \"title\": \"Task with files title\",\n                    \"description\": \"Task with file description\",\n                    \"timeAllotted\": null,\n                    \"status\": {\n                        \"id\": 1,\n                        \"title\": \"Status title\"\n                    },\n                    \"type\": {\n                        \"id\": 1,\n                        \"title\": \"Type title\"\n                    },\n                    \"user\": {\n                        \"id\": 1,\n                        \"name\": \"User name\",\n                        \"email\": \"example@gmail.com\",\n                        \"role\": \"USER\",\n                        \"avatar\": null\n                    },\n                    \"files\": [\n                        {\n                            \"id\": 4,\n                            \"name\": \"image.jpg\"\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n    ```\n\n---\n\n### POST /projects\n\n- **Description**: Creates a new project.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Request Body**:\n\n    - `title` (string, required): Title of the project.\n    - `description` (string, required): Description of the project.\n\n- **Response**:\n\n    ```json\n    {\n        \"project\": {\n            \"title\": \"Project title\",\n            \"description\": \"Project description\",\n            \"id\": \"12\",\n            \"tasksCount\": 0,\n            \"users\": []\n        }\n    }\n    ```\n\n---\n\n### PUT /projects/:projectId\n\n- **Description**: Edits a project by ID.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Request Body**:\n\n    - `title` (string, required): Updated project title.\n    - `description` (string, required): Updated project description.\n\n- **Response**:\n\n    ```json\n    {\n        \"project\": {\n            \"title\": \"Updated title\",\n            \"description\": \"Updated description\",\n            \"id\": \"12\",\n            \"tasksCount\": 0,\n            \"users\": []\n        }\n    }\n    ```\n\n---\n\n### DELETE /projects/:projectId\n\n- **Description**: Deletes a project by ID.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Response**:\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n\n---\n\n### GET /projects/:projectId/users\n\n- **Description**: Retrieves all members (users) of a project by projectId.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"users\": [\n            {\n                \"id\": 1,\n                \"name\": \"AdminUser\",\n                \"email\": \"admin@gmail.com\",\n                \"role\": \"ADMIN\",\n                \"avatar\": null\n            },\n            {\n                \"id\": 2,\n                \"name\": \"User\",\n                \"email\": \"user@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            }\n        ]\n    }\n    ```\n\n---\n\n### POST /projects/:projectId/users\n\n- **Description**: Adds a user to a project.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Request Body**:\n\n    - `userId` (string, required): ID of the user to add.\n\n- **Response**:\n\n    ```json\n    {\n        \"added\": true\n    }\n    ```\n\n---\n\n### DELETE /projects/:projectId/users\n\n- **Description**: Removes a user from a project.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Request Body**:\n\n    - `userId` (string, required): ID of the user to remove.\n\n- **Response**:\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n"
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "get tasks of project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/1/tasks/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"1",
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get task of project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/1/tasks/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"1",
+								"tasks",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Task title\",\r\n    \"description\": \"Task description\",\r\n    \"statusId\": 1,\r\n    \"typeId\": 1,\r\n    \"userId\": 10,\r\n    \"timeAllotted\": 120\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/9/tasks/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"9",
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create task with file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Task with file title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Task with file description  ",
+									"type": "text"
+								},
+								{
+									"key": "statusId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "typeId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/9/tasks/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"9",
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create task with files",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Task with files title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Task with file description  ",
+									"type": "text"
+								},
+								{
+									"key": "statusId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "typeId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/9/tasks/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"9",
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Task title\",\r\n    \"description\": \"New Task description\",\r\n    \"statusId\": 1,\r\n    \"typeId\": 1,\r\n    \"userId\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit task with file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "New Task title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "New Task description",
+									"type": "text"
+								},
+								{
+									"key": "statusId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "typeId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit task with files",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "New Task title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "New Task description",
+									"type": "text"
+								},
+								{
+									"key": "statusId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "typeId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/47007602_349721069125729_3156937027123937280_n-500x500.jpg"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/587f85aef10a9a2a768b5afa.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/125/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"125",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/projects/11/tasks/124/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"projects",
+								"11",
+								"tasks",
+								"124",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /projects/:projectId/tasks\n\n- **Description**: Retrieves all tasks for a specific project.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response:**\n\n    ```json\n    {\n        \"tasks\": [\n            {\n                \"id\": 101,\n                \"title\": \"Task title\",\n                \"description\": \"Task description\",\n                \"timeAllotted\": 120,\n                \"status\": {\n                    \"id\": 1,\n                    \"title\": \"Status title\"\n                },\n                \"type\": {\n                    \"id\": 1,\n                    \"title\": \"Type title\"\n                },\n                \"user\": {\n                    \"id\": 10,\n                    \"name\": \"User name\",\n                    \"email\": \"example@gmail.com\",\n                    \"role\": \"USER\",\n                    \"avatar\": null\n                },\n                \"files\": [\n                    {\n                        \"id\": 4,\n                        \"name\": \"file.jpg\"\n                    }\n                ]\n            }\n        ]\n    }\n    ```\n\n---\n\n### GET /projects/:projectId/tasks/:taskId\n\n- **Description**: Retrieves a specific task by taskId for a specific project.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response:**\n\n    ```json\n    {\n        \"task\": {\n            \"id\": 2,\n            \"title\": \"Task 2\",\n            \"description\": \"Description 2\",\n            \"timeAllotted\": 120,\n            \"status\": {\n                \"id\": 1,\n                \"title\": \"Status title\"\n            },\n            \"type\": {\n                \"id\": 1,\n                \"title\": \"Type title\"\n            },\n            \"user\": {\n                \"id\": 2,\n                \"name\": \"User\",\n                \"email\": \"user@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 4,\n                    \"name\": \"image.jpg\"\n                }\n            ]\n        }\n    }\n    ```\n\n---\n\n### POST /projects/:projectId/tasks\n\n- **Description**: Creates a new task for a specific project.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Request Body**:\n\n    - `title` (string, required): Title of the task.\n    - `description` (string, optional): Description of the task.\n    - `timeAllotted` (number, optional): Allotted time for the task (in minutes).\n    - `statusId` (string, required): ID of the task status.\n    - `typeId` (string, required): ID of the task type.\n    - `userId` (string, optional): ID of the user assigned to the task.\n    - `file` (file, optional): File(s) attached to the task.\n\n- **Response:**\n\n    ```json\n    {\n        \"task\": {\n            \"id\": 101,\n            \"title\": \"New Task\",\n            \"description\": \"Task description\",\n            \"timeAllotted\": 120,\n            \"status\": {\n                \"id\": 1,\n                \"title\": \"Status title\"\n            },\n            \"type\": {\n                \"id\": 1,\n                \"title\": \"Type title\"\n            },\n            \"user\": {\n                \"id\": 10,\n                \"name\": \"User name\",\n                \"email\": \"example@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 4,\n                    \"name\": \"new_file.jpg\"\n                }\n            ]\n        }\n    }\n    ```\n\n---\n\n### PUT /projects/:projectId/tasks/:taskId\n\n- **Description**: Edits an existing task by ID for a specific project.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Request Body**:\n\n    - `title` (string, required): Updated task title.\n    - `description` (string, optional): Updated task description.\n    - `timeAllotted` (number, optional): Updated time allotted for the task (in minutes).\n    - `timeTracked` (number, optional): Tracked time spent on the task (in minutes).\n    - `statusId` (string, optional): Updated task status ID.\n    - `typeId` (string, optional): Updated task type ID.\n    - `userId` (string, optional): Updated user ID assigned to the task.\n    - `file` (file, optional): File(s) attached to the task.\n\n- **Response:**\n\n    ```json\n    {\n        \"task\": {\n            \"id\": 101,\n            \"title\": \"Updated Task\",\n            \"description\": \"Updated task description\",\n            \"timeAllotted\": 150,\n            \"timeTracked\": 60,\n            \"status\": {\n                \"id\": 1,\n                \"title\": \"Updated status\"\n            },\n            \"type\": {\n                \"id\": 2,\n                \"title\": \"Updated type\"\n            },\n            \"user\": {\n                \"id\": 10,\n                \"name\": \"User name\",\n                \"email\": \"example@gmail.com\",\n                \"role\": \"USER\",\n                \"avatar\": null\n            },\n            \"files\": [\n                {\n                    \"id\": 4,\n                    \"name\": \"updated_file.jpg\"\n                }\n            ]\n        }\n    }\n    ```\n\n---\n\n### DELETE /projects/:projectId/tasks/:taskId\n\n- **Description**: Deletes a task by ID for a specific project.\n\n- **Authorization**: Required (Bearer Token). ADMIN only.\n\n- **Response:**\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n"
+		},
+		{
+			"name": "Statuses",
+			"item": [
+				{
+					"name": "get all statuses",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/statuses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Status title\",\r\n    \"color\": \"#123321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/statuses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Status title\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/statuses/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"statuses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/statuses/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"statuses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /statuses\n\n- **Description**: Retrieves a list of all statuses.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"statuses\": [\n            {\n                \"id\": \"1\",\n                \"title\": \"Pending\",\n                \"color\": \"#ffcc00\"\n            }\n        ]\n    }\n    ```\n\n---\n\n### POST /statuses\n\n- **Description**: Creates a new status.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Request Body**:\n    - `title` (string, required): The title of the status.\n    - `color` (string, required): The color of the status.\n\n- **Response**:\n\n    ```json\n    {\n        \"status\": {\n            \"id\": \"1\",\n            \"title\": \"New Status Title\",\n            \"color\": \"#00ff00\"\n        }\n    }\n    ```\n\n---\n\n### PUT /statuses/:statusId\n\n- **Description**: Edits an existing status by ID.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Request Body**:\n    - `title` (string, required): Updated title of the status.\n    - `color` (string, required): Updated color of the status.\n\n- **Response**:\n\n    ```json\n    {\n        \"status\": {\n            \"id\": \"1\",\n            \"title\": \"Updated Status Title\",\n            \"color\": \"#0000ff\"\n        }\n    }\n    ```\n\n---\n\n### DELETE /statuses/:statusId\n\n- **Description**: Deletes a status by ID.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Response**:\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n"
+		},
+		{
+			"name": "Types",
+			"item": [
+				{
+					"name": "get all types",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Type title\",\r\n    \"color\": \"#000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Type title\",\r\n    \"color\": \"#f1f1f1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/types/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"types",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/types/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"types",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /types\n\n- **Description**: Retrieves a list of all types.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response**:\n\n    ```json\n    {\n        \"types\": [\n            {\n                \"id\": \"1\",\n                \"title\": \"Task\",\n                \"color\": \"#ff0000\"\n            }\n        ]\n    }\n    ```\n\n---\n\n### POST /types\n\n- **Description**: Creates a new type.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Request Body**:\n    - `title` (string, required): The title of the type.\n    - `color` (string, required): The color of the type.\n\n- **Response**:\n\n    ```json\n    {\n        \"type\": {\n            \"id\": \"1\",\n            \"title\": \"New Type title\",\n            \"color\": \"#f1f1f1\"\n        }\n    }\n    ```\n\n---\n\n### PUT /types/:typeId\n\n- **Description**: Edits an existing type by ID.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Request Body**:\n    - `title` (string, required): Updated title of the type.\n    - `color` (string, required): Updated color of the type.\n\n- **Response**:\n\n    ```json\n    {\n        \"type\": {\n            \"id\": \"1\",\n            \"title\": \"Updated Type title\",\n            \"color\": \"#00ff00\"\n        }\n    }\n    ```\n\n---\n\n### DELETE /types/:typeId\n\n- **Description**: Deletes a type by ID.\n\n- **Authorization**: Required (Bearer Token). **ADMIN only**.\n\n- **Response**:\n\n    ```json\n    {\n        \"deleted\": true\n    }\n    ```\n"
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "get current user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New User Name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit user with avatar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "New User Name",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/Users/Nikita_Shevtsiv/Desktop/preview_bf714931c37812945c4d063f2324488e.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete avatar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/avatar",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### GET /users\n\n- **Description**: Retrieves a list of all users.\n\n- **Authorization**: Required.\n\n- **Response:**\n\n    ```json\n    {\n        \"users\": [\n            {\n                \"id\": 1,\n                \"email\": \"user@example.com\",\n                \"name\": \"John Doe\",\n                \"role\": \"user\",\n                \"avatar\": \"image.jpg\"\n            }\n        ]\n    }\n    ```\n\n---\n\n### PUT /users\n\n- **Description**: Edits the current user profile.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Request Body:**\n\n    - `name` (string, required): The user's updated name.\n    - `avatar` (file, optional): An updated avatar file.\n\n- **Response:**\n\n    ```json\n    { \n        \"updated\": true \n    }\n    ```\n\n---\n\n### DELETE /users/avatar\n\n- **Description**: Deletes the current user's avatar.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response:**\n\n    ```json\n    { \n        \"updated\": true \n    }\n    ```\n\n---\n\n### POST /users/me\n\n- **Description**: Retrieves the current authenticated user's details.\n\n- **Authorization**: Required (Bearer Token).\n\n- **Response:**\n\n    ```json\n    {\n        \"user\": {\n            \"id\": 1,\n            \"email\": \"user@example.com\",\n            \"name\": \"John Doe\",\n            \"role\": \"user\",\n            \"avatar\": \"image.jpg\"\n        }\n    }\n    ```\n\n"
+		}
+	]
+}

@@ -17,6 +17,36 @@ This project provides a **RESTful backend for a task and project management syst
 
 The backend uses **JWT tokens** for authentication. Role-based access is enforced at the route level.
 
+> ⚠️ **ATTENTION!**
+>
+> Images that you upload to the server are stored in the `static` directory of the same server.  
+> The server only returns the `id` of the uploaded file.  
+> 
+> To view the image returned by the server, you need to combine the server's `baseUrl` and the `fileId`.  
+> 
+> For example:  
+> `http://localhost:5000/{fileId}`
+
 ---
 
-To see all available endpoints and test them, please import the Postman collection and environment provided in this repository.
+To see all available endpoints and test them, please import the Postman collection and environment provided in this repository (`attachments` folder).
+
+
+## Getting Started
+
+1. Clone the repository:
+```bash
+git clone https://git.epam.com/nikita_shevtsiv/jira-pet-project-backend.git
+```
+2. Install dependencies:
+```bash
+npm install
+```
+3. Run the project:
+```bash
+npm run dev
+```
+4. Make sure that a file called `database.sqlite` is created in the root of the project — this is your database.
+5. Find the Postman collection [`attachments/Jira Pet Project (Node.js).postman_collection`] and its corresponding Env [`attachments/Jira_pet_project_node_js.postman_environment.json`].
+6. Set up Postman to display the collection (`Jira Pet Project (Node.js)`) and use the Env (`Jira_pet_project_node_js`).
+7. Try the `Authorization/login` endpoint. You should see a `400 - Bad Request` status with the message: `"User not found"`, as the database is still empty.
